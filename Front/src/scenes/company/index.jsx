@@ -106,7 +106,7 @@ const Company = () => {
               color: colors.greenAccent[300],
             },
             "& .MuiDataGrid-columnHeaders": {
-              backgroundColor: colors.blueAccent[400],
+              backgroundColor: "#82CFD8",
               borderBottom: "none",
             },
             "& .MuiDataGrid-virtualScroller": {
