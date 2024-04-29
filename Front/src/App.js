@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import Topbar from "./scenes/global/Topbar";
-import Sidebar from "./scenes/global/Sidebar";
+import Topbar from "./scenes/sidebar/Topbar";
+import Sidebar from "./scenes/sidebar/Sidebar";
 import Dashboard from "./scenes/dashboard";
 import Company from "./scenes/company";
 import Invoices from "./scenes/invoices";
