@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Topbar from "./scenes/sidebar/Topbar";
 import Sidebar from "./scenes/sidebar/Sidebar";
 import Dashboard from "./scenes/dashboard";
+import Collaborator from "./scenes/collaborator/collaborator";
 import Company from "./scenes/company";
 import Invoices from "./scenes/invoices";
 import Contrat from "./scenes/contrat";
@@ -32,7 +33,12 @@ function App() {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/company" element={<Company />} />
+
+              <Route path="/collaborator" element={<Collaborator />} />
+              
+
               <Route path="/contrat" element={<Contrat />} />
+
               <Route path="/invoices" element={<Invoices />} />
               <Route path="/form" element={<Form />} />
               <Route path="/bar" element={<Bar />} />

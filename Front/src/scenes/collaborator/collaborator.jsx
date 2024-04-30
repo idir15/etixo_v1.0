@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import {
   Button,
@@ -12,13 +13,10 @@ import { tokens } from "../../theme";
 import { mockDataContacts } from "../../data/mockData";
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
-import CompanyForm from "./companyForm";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-import AddIcon from '@mui/icons-material/Add';
-
-const Company = () => {
+const Collaborator = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [open, setOpen] = useState(false);
@@ -30,89 +28,74 @@ const Company = () => {
   const handleClose = () => {
     setOpen(false);
   };
-
   const handleDelete = (id) => {
+    
     console.log("Supprimer l'élément avec l'ID :", id);
   };
 
   const handleEdit = (id) => {
+    
     console.log("Modifier l'élément avec l'ID :", id);
   };
 
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
-    { field: "registrarId", headerName: "Registrar ID" },
+    
     {
       field: "name",
-      headerName: "Name",
+      headerName: "Nom",
       flex: 1,
-      cellClassName: "name-column--cell",
+     
     },
     {
-      field: "address",
-      headerName: "Address",
-      flex: 1,
-    },
-    {
-      field: "Responsable",
-      headerName: "Responsable",
-      flex: 1,
-    },
-    {
-      field: "email",
-      headerName: "Email",
-      flex: 1,
-    },
-    {
-      field: "N° SIRET",
-      headerName: "N° SIRET",
-      flex: 1,
-    },
-    {
-      field: "Forme juridique",
-      headerName: "Forme juridique",
-      flex: 1,
-    },
-    {
-      field: "phone",
-      headerName: "Phone Number",
-      flex: 1,
-    },
-    {
-      field: "Code NAF",
-      headerName: "Code NAF",
-      flex: 1,
-    },
-    {
-      field: "TVA",
-      headerName: "TVA",
-      flex: 1,
-    },
-    {
-      field: "actions",
-      headerName: "Actions",
-      flex: 0.55,
-      renderCell: (params) => (
-        <>
-          <Button onClick={() => handleEdit(params.row.id)} startIcon={<EditIcon />} />
-          <Button onClick={() => handleDelete(params.row.id)} startIcon={<DeleteIcon />} />
-        </>
-      ),
-    },
+        field: "lastname",
+        headerName: "Prénom",
+        flex: 1,
+        
+      },
+      {
+        field: "statut",
+        headerName: "Statut",
+        flex: 1,
+        
+      },
+      { field: "startDate",
+       headerName: "Date début contrat",
+        flex: 1 }, 
+
+     { field: "endDate", 
+       headerName: "Date fin contrat",
+       flex: 1 
+      },
+
+      {
+        field: "actions",
+        headerName: "Actions",
+        flex: 0.3,
+        
+        renderCell: (params) => (
+          <>
+            <Button onClick={() => handleEdit(params.row.id)} startIcon={<EditIcon />}>
+            </Button>
+
+            <Button onClick={() => handleDelete(params.row.id)} startIcon={<DeleteIcon />}>
+            </Button>
+            
+          </>
+        ),
+      },
+    
+    
   ];
 
   return (
     <>
       <Box m="20px">
         <Header
-          title="COMPAGNIES"
-          subtitle="Liste de Comapgnies"
+          title="Collaborateur"
+          subtitle="Liste des collaborateurs"
         />
-
-
-        <div>
-          <CompanyForm open={open} handleClose={handleClose} />
-        </div>
+      
 
         <Box
           m="40px 0 0 0"
@@ -146,19 +129,6 @@ const Company = () => {
             },
           }}
         >
-
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-  <Button
-    variant="contained"
-    style={{ backgroundColor: '#06668C', color: '#FFFFFF' }} // Utilisez la couleur rouge avec une valeur hexadécimale
-    size="large"
-    onClick={handleOpen}
-    startIcon={<AddIcon />}
-  >
-    Ajouter
-  </Button>
-</div>
-
           <DataGrid
             rows={mockDataContacts}
             columns={columns}
@@ -170,4 +140,4 @@ const Company = () => {
   );
 };
 
-export default Company;
+export default Collaborator;

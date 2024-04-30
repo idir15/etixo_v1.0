@@ -7,8 +7,13 @@ import { mockDataContacts } from "../../data/mockData";
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
 import ContratForm from "./contratForm";
+
 import { Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+
 
 const Contrat = () => {
   const theme = useTheme();
@@ -21,6 +26,16 @@ const Contrat = () => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleDelete = (id) => {
+    
+    console.log("Supprimer l'élément avec l'ID :", id);
+  };
+
+  const handleEdit = (id) => {
+    
+    console.log("Modifier l'élément avec l'ID :", id);
   };
 
   const columns = [
@@ -72,6 +87,23 @@ const Contrat = () => {
       headerName: "TVA",
       flex: 1,
     },
+
+    {
+      field: "actions",
+      headerName: "Actions",
+      flex: 0.55,
+      
+      renderCell: (params) => (
+        <>
+          <Button onClick={() => handleEdit(params.row.id)} startIcon={<EditIcon />}>
+          </Button>
+
+          <Button onClick={() => handleDelete(params.row.id)} startIcon={<DeleteIcon />}>
+          </Button>
+          
+        </>
+      ),
+    },
   ];
 
   return (
@@ -108,7 +140,7 @@ const Contrat = () => {
             },
             "& .MuiDataGrid-footerContainer": {
               borderTop: "none",
-              backgroundColor: colors.blueAccent[700],
+              backgroundColor: "#82C9D1",
             },
             "& .MuiCheckbox-root": {
               color: `${colors.greenAccent[200]} !important`,
