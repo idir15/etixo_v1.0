@@ -7,6 +7,7 @@ import { tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
+import BusinessIcon from '@mui/icons-material/Business';
 import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
@@ -16,6 +17,12 @@ import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutl
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
+import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
+import WorkIcon from '@mui/icons-material/Work';
+import FactCheckIcon from '@mui/icons-material/FactCheck';
+import RequestPageIcon from '@mui/icons-material/RequestPage';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -103,42 +110,42 @@ const Sidebar = () => {
             <Item
               title="Compagnie"
               to="/company"
-              icon={<PeopleOutlinedIcon />}
+              icon={<BusinessIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
-              title="Contact"
-              to="/contacts"
-              icon={<ContactsOutlinedIcon />}
+              title="Contrat"
+              to="/contrat"
+              icon={< HistoryEduIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Collaborateur"
-              to="/invoices"
-              icon={<ReceiptOutlinedIcon />}
+              to="/collaborator"
+              icon={<PeopleAltIcon />}
               selected={selected}
               setSelected={setSelected}
             />
                         <Item
               title="Mission"
               to="/invoices"
-              icon={<ReceiptOutlinedIcon />}
+              icon={<WorkIcon/>}
               selected={selected}
               setSelected={setSelected}
             />
                         <Item
               title="Facture"
               to="/invoices"
-              icon={<ReceiptOutlinedIcon />}
+              icon={<RequestPageIcon />}
               selected={selected}
               setSelected={setSelected}
             />
                         <Item
               title="Cras"
               to="/invoices"
-              icon={<ReceiptOutlinedIcon />}
+              icon={<FactCheckIcon />}
               selected={selected}
               setSelected={setSelected}
             />

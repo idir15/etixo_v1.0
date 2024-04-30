@@ -12,9 +12,9 @@ import { tokens } from "../../theme";
 import { mockDataContacts } from "../../data/mockData";
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
-import CompanyForm from "./companyForm";
+import ContratForm from "./contratForm";
 
-const Company = () => {
+const Contrat = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [open, setOpen] = useState(false);
@@ -31,24 +31,24 @@ const Company = () => {
     { field: "id", headerName: "ID", flex: 0.5 },
     { field: "registrarId", headerName: "Registrar ID" },
     {
-      field: "name",
-      headerName: "Name",
+      field: "Nom du Contrat",
+      headerName: "Nom du Contrat",
       flex: 1,
       cellClassName: "name-column--cell",
     },
     {
-      field: "address",
-      headerName: "Address",
+      field: "Collaborateur",
+      headerName: "Collaborateur",
       flex: 1,
     },
     {
-      field: "Responsable",
-      headerName: "Responsable",
+      field: "Société du collaborateur",
+      headerName: "Société du collaborateur",
       flex: 1,
     },
     {
-      field: "email",
-      headerName: "Email",
+      field: "Statut du collaborateur",
+      headerName: "Statut du collaborateur",
       flex: 1,
     },
     {
@@ -82,14 +82,14 @@ const Company = () => {
     <>
       <Box m="20px">
         <Header
-          title="COMPAGNIES"
-          subtitle="Liste de Comapgnies"
+          title="CONTRATS"
+          subtitle="Liste des Contrats"
         />
         <Button color="info" size="small" onClick={handleOpen}>
           Ouvrir
         </Button>
         <div>
-          <CompanyForm open={open} handleClose={handleClose} />
+          <ContratForm open={open} handleClose={handleClose} />
         </div>
 
         <Box
@@ -135,4 +135,4 @@ const Company = () => {
   );
 };
 
-export default Company;
+export default Contrat;
