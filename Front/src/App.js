@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Topbar from "./scenes/sidebar/Topbar";
 import Sidebar from "./scenes/sidebar/Sidebar";
 import Dashboard from "./scenes/dashboard";
+import Collaborator from "./scenes/collaborator/collaborator";
 import Company from "./scenes/company";
 import Invoices from "./scenes/invoices";
 import Contacts from "./scenes/contacts";
@@ -15,6 +16,7 @@ import Geography from "./scenes/geography";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 import Calendar from "./scenes/calendar/calendar";
+
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -31,6 +33,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/company" element={<Company />} />
+              <Route path="/collaborator" element={<Collaborator />} />
               <Route path="/contacts" element={<Contacts />} />
               <Route path="/invoices" element={<Invoices />} />
               <Route path="/form" element={<Form />} />

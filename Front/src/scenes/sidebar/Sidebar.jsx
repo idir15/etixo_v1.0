@@ -45,7 +45,7 @@ const Sidebar = () => {
     <Box
     sx={{
       "& .pro-sidebar-inner": {
-        background: "#82C9D1 !important", // Utilisation de la couleur hexadécimale directement
+        background: "#82C9D1 !important", // couleur 
       },
       "& .pro-icon-wrapper": {
         backgroundColor: "transparent !important",
@@ -116,8 +116,8 @@ const Sidebar = () => {
             />
             <Item
               title="Collaborateur"
-              to="/invoices"
-              icon={<ReceiptOutlinedIcon />}
+              to="/collaborator"
+              icon={<PeopleOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
