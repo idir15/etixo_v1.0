@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import {
   Button,
@@ -12,7 +13,8 @@ import { tokens } from "../../theme";
 import { mockDataContacts } from "../../data/mockData";
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
-
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 const Collaborator = () => {
   const theme = useTheme();
@@ -25,6 +27,15 @@ const Collaborator = () => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+  const handleDelete = (id) => {
+    
+    console.log("Supprimer l'élément avec l'ID :", id);
+  };
+
+  const handleEdit = (id) => {
+    
+    console.log("Modifier l'élément avec l'ID :", id);
   };
 
   const columns = [
@@ -48,11 +59,32 @@ const Collaborator = () => {
         flex: 1,
         
       },
-    {
-      field: "address",
-      headerName: "Address",
-      flex: 1,
-    },
+      { field: "startDate",
+       headerName: "Date début contrat",
+        flex: 1 }, 
+
+     { field: "endDate", 
+       headerName: "Date fin contrat",
+       flex: 1 
+      },
+
+      {
+        field: "actions",
+        headerName: "Actions",
+        flex: 0.3,
+        
+        renderCell: (params) => (
+          <>
+            <Button onClick={() => handleEdit(params.row.id)} startIcon={<EditIcon />}>
+            </Button>
+
+            <Button onClick={() => handleDelete(params.row.id)} startIcon={<DeleteIcon />}>
+            </Button>
+            
+          </>
+        ),
+      },
+    
     
   ];
 
@@ -87,7 +119,7 @@ const Collaborator = () => {
             },
             "& .MuiDataGrid-footerContainer": {
               borderTop: "none",
-              backgroundColor: colors.blueAccent[700],
+              backgroundColor: "#82C9D1",
             },
             "& .MuiCheckbox-root": {
               color: `${colors.greenAccent[200]} !important`,

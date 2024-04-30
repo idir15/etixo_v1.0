@@ -102,8 +102,8 @@ const CompanyForm = ({ open, handleClose }) => {
           <Grid container spacing={3} mb={4}>
             <Grid item xs={6}>
               <TextField
-                label="Nom de responsable"
-                placeholder="Nom de responsable"
+                label="Nom du responsable"
+                placeholder="Nom du responsable"
                 fullWidth
                 name="nomResponsable"
                 color="success"
@@ -160,8 +160,8 @@ const CompanyForm = ({ open, handleClose }) => {
           <Grid container spacing={3}>
             <Grid item xs={6}>
               <TextField
-                label="TVA"
-                placeholder="TVA Intra"
+                label="TVA Intracom"
+                placeholder="TVA Intracom"
                 fullWidth
                 name="tva"
                 color="success"
@@ -170,8 +170,8 @@ const CompanyForm = ({ open, handleClose }) => {
             </Grid>
             <Grid item xs={6}>
               <TextField
-                label="TVA"
-                placeholder="TVA Intra"
+                label="TVA Intra Societe"
+                placeholder="TVA Intra Societe"
                 fullWidth
                 name="tva"
                 color="success"

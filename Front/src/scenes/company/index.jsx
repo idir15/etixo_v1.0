@@ -13,6 +13,9 @@ import { mockDataContacts } from "../../data/mockData";
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
 import CompanyForm from "./companyForm";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
 
 const Company = () => {
   const theme = useTheme();
@@ -25,6 +28,14 @@ const Company = () => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleDelete = (id) => {
+    console.log("Supprimer l'élément avec l'ID :", id);
+  };
+
+  const handleEdit = (id) => {
+    console.log("Modifier l'élément avec l'ID :", id);
   };
 
   const columns = [
@@ -76,6 +87,17 @@ const Company = () => {
       headerName: "TVA",
       flex: 1,
     },
+    {
+      field: "actions",
+      headerName: "Actions",
+      flex: 0.55,
+      renderCell: (params) => (
+        <>
+          <Button onClick={() => handleEdit(params.row.id)} startIcon={<EditIcon />} />
+          <Button onClick={() => handleDelete(params.row.id)} startIcon={<DeleteIcon />} />
+        </>
+      ),
+    },
   ];
 
   return (
@@ -85,9 +107,9 @@ const Company = () => {
           title="COMPAGNIES"
           subtitle="Liste de Comapgnies"
         />
-        <Button color="info" size="small" onClick={handleOpen}>
-          Ouvrir
-        </Button>
+        <Box mb={2}>
+          
+        </Box>
         <div>
           <CompanyForm open={open} handleClose={handleClose} />
         </div>
@@ -114,7 +136,7 @@ const Company = () => {
             },
             "& .MuiDataGrid-footerContainer": {
               borderTop: "none",
-              backgroundColor: colors.blueAccent[700],
+              backgroundColor: "#82C9D1",
             },
             "& .MuiCheckbox-root": {
               color: `${colors.greenAccent[200]} !important`,
@@ -124,6 +146,14 @@ const Company = () => {
             },
           }}
         >
+          <Button
+            color="info"
+            size="small"
+            startIcon={<AddIcon />}
+            onClick={handleOpen}
+          >
+            Ajouter
+          </Button>
           <DataGrid
             rows={mockDataContacts}
             columns={columns}
