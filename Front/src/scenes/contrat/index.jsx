@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from "@mui/material";
+
 import { Box } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
@@ -13,6 +7,8 @@ import { mockDataContacts } from "../../data/mockData";
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
 import ContratForm from "./contratForm";
+import { Button } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 
 const Contrat = () => {
   const theme = useTheme();
@@ -85,9 +81,7 @@ const Contrat = () => {
           title="CONTRATS"
           subtitle="Liste des Contrats"
         />
-        <Button color="info" size="small" onClick={handleOpen}>
-          Ouvrir
-        </Button>
+
         <div>
           <ContratForm open={open} handleClose={handleClose} />
         </div>
@@ -124,12 +118,27 @@ const Contrat = () => {
             },
           }}
         >
+
+<div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+  <Button
+    variant="contained"
+    style={{ backgroundColor: '#06668C', color: '#FFFFFF' }} // Utilisez la couleur rouge avec une valeur hexadécimale
+    size="large"
+    onClick={handleOpen}
+    startIcon={<AddIcon />}
+  >
+    Ajouter
+  </Button>
+</div>
+
+
           <DataGrid
             rows={mockDataContacts}
             columns={columns}
             components={{ Toolbar: GridToolbar }}
           />
         </Box>
+        
       </Box>
     </>
   );

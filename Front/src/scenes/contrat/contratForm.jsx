@@ -40,35 +40,12 @@ const ContratForm = ({ open, handleClose }) => {
       }}>
 
       <DialogTitle sx={{ backgroundColor: "#0c54fa", color: "#fff" }}>
-        Nouvelle Compagnie
+        Nouvelle Contrat
       </DialogTitle>
       <DialogContent>
         <CardContent >
-          <br />
-          <label>
-          Type:
-          <ToggleButtonGroup
-      value={formats}
-      onChange={handleFormat}
-      aria-label="text formatting"
-      sx={{ marginBottom: '18px', width: '100%' }}
-    >
-      <ToggleButton value="italic" aria-label="italic"
-                sx={{
-                    width: '10%',
-                    fontSize: '18px',
-                  }}>Client
-        
-      </ToggleButton>
-      <ToggleButton value="underlined" aria-label="underlined"
-                sx={{
-                    width: '10%',
-                    fontSize: '18px',
-                  }}>
-        ESN
-      </ToggleButton>
-    </ToggleButtonGroup>
-        </label>
+
+
 
 
 <br />
@@ -77,15 +54,16 @@ const ContratForm = ({ open, handleClose }) => {
               <TextField
                id="outlined-multiline-flexible"
                 label="Nom du Contrat"
-                placeholder="Nom de l'entrepriseNom du Contrat"
+                placeholder="Nom du Contrat"
                 fullWidth
                 name="Nom du Contrat"
                 color="success"
-                sx={{ 
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+                /* sx={{ 
                     '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' },
                     '& .MuiInputLabel-root': { fontSize: '18px' },
                     '& .MuiOutlinedInput-input': { padding: '14.5px 16px' } // Ajustez le padding selon vos besoins
-                  }}
+                  }} */
               />
             </Grid>
             <Grid item xs={6}>

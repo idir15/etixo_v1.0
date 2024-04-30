@@ -13,6 +13,7 @@ import { mockDataContacts } from "../../data/mockData";
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
 import CompanyForm from "./companyForm";
+import AddIcon from '@mui/icons-material/Add';
 
 const Company = () => {
   const theme = useTheme();
@@ -85,9 +86,7 @@ const Company = () => {
           title="COMPAGNIES"
           subtitle="Liste de Comapgnies"
         />
-        <Button color="info" size="small" onClick={handleOpen}>
-          Ouvrir
-        </Button>
+
         <div>
           <CompanyForm open={open} handleClose={handleClose} />
         </div>
@@ -124,6 +123,17 @@ const Company = () => {
             },
           }}
         >
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+  <Button
+    variant="contained"
+    style={{ backgroundColor: '#06668C', color: '#FFFFFF' }} // Utilisez la couleur rouge avec une valeur hexadécimale
+    size="large"
+    onClick={handleOpen}
+    startIcon={<AddIcon />}
+  >
+    Ajouter
+  </Button>
+</div>
           <DataGrid
             rows={mockDataContacts}
             columns={columns}
