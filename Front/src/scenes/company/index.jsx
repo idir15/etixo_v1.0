@@ -125,7 +125,7 @@ const Company = () => {
           subtitle="Liste des Compagnies"
         />
         <div>
-          {/* Ajoutez votre composant de formulaire d'entreprise ici */}
+          <CompanyForm open={open} handleClose={handleClose} />
         </div>
 
         <Box
