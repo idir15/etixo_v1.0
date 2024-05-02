@@ -114,8 +114,8 @@ const Company = () => {
   return (
     <>
       <Box m="20px">
-        <div>
-          {/* Ajoutez votre composant de formulaire d'entreprise ici */}
+      <div>
+          <CompanyForm open={open} handleClose={handleClose} />
         </div>
 
         <Box
