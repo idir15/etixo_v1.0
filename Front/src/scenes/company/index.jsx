@@ -5,6 +5,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Typography,
 } from "@mui/material";
 import { Box } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
@@ -13,6 +14,9 @@ import CompanyForm from "./companyForm";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
+
+import CloseIcon from '@mui/icons-material/Close';
+
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 
@@ -22,6 +26,8 @@ const Company = () => {
   const colors = tokens(theme.palette.mode);
   const [open, setOpen] = useState(false);
   const [companies, setCompanies] = useState([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [idToDelete, setIdToDelete] = useState(null);
 
   const handleOpen = () => {
     setOpen(true);
@@ -29,6 +35,15 @@ const Company = () => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleDialogOpen = (id) => {
+    setDialogOpen(true);
+    setIdToDelete(id);
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
   };
 
   const getAllCompanies = async () => {
@@ -55,10 +70,25 @@ const Company = () => {
     fetchData();
   }, []);
 
-  const handleDelete = (id) => {
-    console.log("Supprimer l'élément avec l'ID :", id);
-  };
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/v1/deleteCompany/${idToDelete}`, {
+        method: 'DELETE',
+      });
 
+      if (response.ok) {
+        console.log('Compagnie supprimée avec succès');
+        const updatedCompanies = companies.filter(company => company.id !== idToDelete);
+        setCompanies(updatedCompanies);
+        handleDialogClose();
+      } else {
+        console.error('Erreur lors de la suppression de la compagnie');
+      }
+    } catch (error) {
+      console.error('Erreur réseau', error);
+    }
+  };
+  
   const handleEdit = (id) => {
     console.log("Modifier l'élément avec l'ID :", id);
   };
@@ -81,7 +111,7 @@ const Company = () => {
       renderCell: (params) => (
         <>
           <Button onClick={() => handleEdit(params.row.id)} startIcon={<EditIcon />} />
-          <Button onClick={() => handleDelete(params.row.id)} startIcon={<DeleteIcon />} />
+          <Button onClick={() => handleDialogOpen(params.row.id)} startIcon={<DeleteIcon />} />
         </>
       ),
     },
@@ -95,7 +125,7 @@ const Company = () => {
           subtitle="Liste des Compagnies"
         />
         <div>
-          <CompanyForm open={open} handleClose={handleClose} />
+          {/* Ajoutez votre composant de formulaire d'entreprise ici */}
         </div>
 
         <Box
@@ -149,6 +179,25 @@ const Company = () => {
           />
         </Box>
       </Box>
+      <Dialog open={dialogOpen} onClose={handleDialogClose} maxWidth="sm" fullWidth>
+        <DialogTitle style={{ textAlign: 'center', position: 'relative' }}>
+          <CloseIcon style={{ position: 'absolute', top: '10px', right: '10px', cursor: 'pointer' }} onClick={handleDialogClose} />
+          <Typography variant="h4" component="h4" style={{ fontSize: '26px', margin: '30px 0 -10px' }}>
+            Êtes-vous sûr ?
+          </Typography>
+        </DialogTitle>
+        <DialogContent style={{ textAlign: 'center', color: '#999', padding: '20px', fontSize: '14px' }}>
+          <p>Voulez-vous vraiment supprimer cette entreprise ? Cette opération ne peut pas être annulée.</p>
+        </DialogContent>
+        <DialogActions style={{ border: 'none', textAlign: 'center', borderRadius: '5px', fontSize: '13px', padding: '10px 15px 25px' }}>
+          <Button onClick={handleDialogClose} color="info" size="large" style={{ color: '#999', minWidth: '120px', border: 'none', minHeight: '40px', borderRadius: '3px', margin: '0 5px', outline: 'none !important' }}>
+            Annuler
+          </Button>
+          <Button onClick={handleDelete} color="error" size="large" style={{ color: '#fff', minWidth: '120px', border: 'none', minHeight: '40px', borderRadius: '3px', margin: '0 5px', outline: 'none !important', background: '#f15e5e' }}>
+            Supprimer
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

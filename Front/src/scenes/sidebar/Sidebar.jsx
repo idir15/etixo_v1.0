@@ -87,7 +87,11 @@ const Sidebar = () => {
                 alignItems="center"
                 ml="15px"
               >
-                <img src={logoEtixway} alt="Etixway Logo" style={{ height: '30px' }} />
+
+
+                <img src={logoEtixway} alt="Etixway Logo" style={{ height: '30px' }} /> 
+
+
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
                 </IconButton>

@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
+  Typography,
 } from "@mui/material";
 import { Box } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
@@ -14,12 +15,15 @@ import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import CloseIcon from '@mui/icons-material/Close';
 
 const Collaborator = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [open, setOpen] = useState(false);
-  const [contacts, setContacts] = useState(mockDataContacts); // Utilisation de l'état pour les données des collaborateurs
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [idToDelete, setIdToDelete] = useState(null);
+  const [collaborator, setCollaborator] = useState([]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -29,18 +33,50 @@ const Collaborator = () => {
     setOpen(false);
   };
 
-  const handleDelete = async (id) => {
+  const handleDialogOpen = (id) => {
+    setDialogOpen(true);
+    setIdToDelete(id);
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+  };
+
+  const getAllcollaborator = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/v1/deleteCollaborator/${id}`, {
+      const response = await fetch("http://localhost:8080/api/v1/getAllcollaborator");
+      if (response.ok) {
+        const data = await response.json();
+        return data;
+      } else {
+        console.error("Failed to fetch collaborator");
+        return [];
+      }
+    } catch (error) {
+      console.error("Error fetching collaborator:", error);
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const companiesData = await getAllcollaborator();
+      setCollaborator(companiesData);
+    };
+    fetchData();
+  }, []);
+
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/v1/deleteCollaborator/${idToDelete}`, {
         method: 'DELETE',
       });
 
       if (response.ok) {
         console.log('Collaborateur supprimé avec succès');
-        // Supprimer la ligne de données correspondante des collaborateurs
-        const updatedContacts = contacts.filter(contact => contact.id !== id);
-        // Mettre à jour l'état avec les données mises à jour
-        setContacts(updatedContacts);
+        const updatedCollaborator = collaborator.filter(collaborator => collaborator.id !== idToDelete);
+        setCollaborator(updatedCollaborator);
+        handleDialogClose();
       } else {
         console.error('Erreur lors de la suppression du collaborateur');
       }
@@ -54,22 +90,19 @@ const Collaborator = () => {
   };
 
   const columns = [
-    { field: "id", headerName: "ID", flex: 0.5 },
-    { field: "name", headerName: "Nom", flex: 1 },
-    { field: "lastname", headerName: "Prénom", flex: 1 },
-    { field: "statut", headerName: "Statut", flex: 1 },
-    { field: "startDate", headerName: "Date début contrat", flex: 1 }, 
-    { field: "endDate", headerName: "Date fin contrat", flex: 1 },
+    { field: "firstname", headerName: "Nom", flex: 1 },
+    { field: "name", headerName: "Prénom", flex: 1 },
+    { field: "status", headerName: "Statut", flex: 1 },
+    { field: "startDateContract", headerName: "Date début contrat", flex: 1 }, 
+    { field: "endDateContract", headerName: "Date fin contrat", flex: 1 },
     {
       field: "actions",
       headerName: "Actions",
       flex: 0.3,
       renderCell: (params) => (
         <>
-          <Button onClick={() => handleEdit(params.row.id)} startIcon={<EditIcon />}>
-          </Button>
-          <Button onClick={() => handleDelete(params.row.id)} startIcon={<DeleteIcon />}>
-          </Button>
+          <Button onClick={() => handleEdit(params.row.id)} startIcon={<EditIcon />} />
+          <Button onClick={() => handleDialogOpen(params.row.id)} startIcon={<DeleteIcon />} />
         </>
       ),
     },
@@ -115,12 +148,31 @@ const Collaborator = () => {
           }}
         >
           <DataGrid
-            rows={contacts} // Utilisation de l'état pour les données des collaborateurs
+            rows={collaborator}
             columns={columns}
             components={{ Toolbar: GridToolbar }}
           />
         </Box>
       </Box>
+      <Dialog open={dialogOpen} onClose={handleDialogClose} maxWidth="sm" fullWidth>
+        <DialogTitle style={{ textAlign: 'center', position: 'relative' }}>
+          <CloseIcon style={{ position: 'absolute', top: '10px', right: '10px', cursor: 'pointer' }} onClick={handleDialogClose} />
+          <Typography variant="h4" component="h4" style={{ fontSize: '26px', margin: '30px 0 -10px' }}>
+            Êtes-vous sûr ?
+          </Typography>
+        </DialogTitle>
+        <DialogContent style={{ textAlign: 'center', color: '#999', padding: '20px', fontSize: '14px' }}>
+          <p>Voulez-vous vraiment supprimer ce collaborateur ? Cette opération ne peut pas être annulée.</p>
+        </DialogContent>
+        <DialogActions style={{ border: 'none', textAlign: 'center', borderRadius: '5px', fontSize: '13px', padding: '10px 15px 25px' }}>
+          <Button onClick={handleDialogClose} color="info" size="large" style={{ color: '#999', minWidth: '120px', border: 'none', minHeight: '40px', borderRadius: '3px', margin: '0 5px', outline: 'none !important' }}>
+            Annuler
+          </Button>
+          <Button onClick={handleDelete} color="error" size="large" style={{ color: '#fff', minWidth: '120px', border: 'none', minHeight: '40px', borderRadius: '3px', margin: '0 5px', outline: 'none !important', background: '#f15e5e' }}>
+            Supprimer
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
