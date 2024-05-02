@@ -53,7 +53,7 @@ const Sidebar = () => {
     <Box
     sx={{
       "& .pro-sidebar-inner": {
-        background: "#82C9D1 !important", // couleur 
+        background: "#82C9D1 !important", // Utilisation de la couleur hexadécimale directement
       },
       "& .pro-icon-wrapper": {
         backgroundColor: "transparent !important",
@@ -62,7 +62,7 @@ const Sidebar = () => {
         padding: "5px 35px 5px 20px !important",
       },
       "& .pro-inner-item:hover": {
-        color: "#1C3A88 !important",
+        color: "#868dfb !important",
       },
       "& .pro-menu-item.active": {
         color: "#868484 !important",
@@ -88,7 +88,9 @@ const Sidebar = () => {
                 ml="15px"
               >
 
+
                 <img src={logoEtixway} alt="Etixway Logo" style={{ height: '30px' }} /> 
+
 
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
@@ -125,9 +127,7 @@ const Sidebar = () => {
             <Item
               title="Collaborateur"
               to="/collaborator"
-
               icon={<PeopleAltIcon />}
-
               selected={selected}
               setSelected={setSelected}
             />
