@@ -55,10 +55,10 @@ const ContratForm = ({ open, handleClose }) => {
             <Grid item xs={6}>
               <TextField
                id="outlined-multiline-flexible"
-                label="Nom du Contrat"
-                placeholder="Nom du Contrat"
+                label="Référence du Contrat"
+                placeholder="Référence du Contrat"
                 fullWidth
-                name="Nom du Contrat"
+                name="Référence du Contrat"
                 color="success"
                 sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
                 /* sx={{ 
@@ -80,7 +80,17 @@ const ContratForm = ({ open, handleClose }) => {
             </Grid>
           </Grid>
           <Grid container spacing={3} mb={4}>
-            <Grid item xs={6}>
+          <Grid item xs={4}>
+              <TextField
+                label="Type de Contrat"
+                placeholder="Type de Contrat"
+                fullWidth
+                name="Type de Contrat"
+                color="success"
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+              />
+            </Grid>
+            <Grid item xs={4}>
               <TextField
                 label="Nom de Société du collaborateur"
                 placeholder="Société du collaborateur"
@@ -90,7 +100,7 @@ const ContratForm = ({ open, handleClose }) => {
                 sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <TextField
                 label="Statut du collaborateur"
                 placeholder="Statut du collaborateur"
@@ -101,12 +111,35 @@ const ContratForm = ({ open, handleClose }) => {
               />
             </Grid>
           </Grid>
+          <Grid container spacing={3} mb={4}>
+            <Grid item xs={6}>
+              <TextField
+               id="outlined-multiline-flexible"
+                label="Date début Contrat"
+                placeholder="Date début Contrat"
+                fullWidth
+                name="Date debut Contrat"
+                color="success"
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="Date fin Contrat"
+                placeholder="Date fin Contrat"
+                fullWidth
+                name="Date fin Contrat"
+                color="success"
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+              />
+            </Grid>
+          </Grid>
 
           <Grid container spacing={2} mb={4}>
             <Grid item xs={4}>
               <TextField
-                label="N° SIRET"
-                placeholder="Numero SIRET"
+                label="Salaire Brut Annuel"
+                placeholder="Salaire Brut Annuel"
                 fullWidth
                 type="number"
                 name="siret"
@@ -116,43 +149,20 @@ const ContratForm = ({ open, handleClose }) => {
             </Grid>
             <Grid item xs={4}>
               <TextField
-                label="Forme juridique"
-                placeholder="Forme juridique"
+                label="Salaire Mensuel Net"
+                placeholder="Salaire Mensuel Net"
                 fullWidth
-                name="formeJuridique"
+                name="Salaire Mensuel Net"
                 color="success"
                 sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
               />
             </Grid>
             <Grid item xs={4}>
               <TextField
-                label="Code NAF"
-                placeholder="Code NAF"
+                label="Charge Mensuel Patronale"
+                placeholder="Charge Mensuel Patronale"
                 fullWidth
-                name="codeNAF"
-                color="success"
-                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
-              />
-            </Grid>
-          </Grid>
-
-          <Grid container spacing={3}>
-            <Grid item xs={6}>
-              <TextField
-                label="TVA"
-                placeholder="TVA Intra"
-                fullWidth
-                name="tva"
-                color="success"
-                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                label="TVA"
-                placeholder="TVA Intra"
-                fullWidth
-                name="tva"
+                name="Charge Mensuel Patronale"
                 color="success"
                 sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
               />

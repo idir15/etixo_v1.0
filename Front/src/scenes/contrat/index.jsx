@@ -40,51 +40,51 @@ const Contrat = () => {
 
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
-    { field: "registrarId", headerName: "Registrar ID" },
-    {
-      field: "Nom du Contrat",
-      headerName: "Nom du Contrat",
-      flex: 1,
-      cellClassName: "name-column--cell",
-    },
+    { field: "Référence du Contrat", headerName: "Référence du Contrat" },
     {
       field: "Collaborateur",
       headerName: "Collaborateur",
       flex: 1,
+      cellClassName: "name-column--cell",
     },
     {
-      field: "Société du collaborateur",
-      headerName: "Société du collaborateur",
+      field: "Type",
+      headerName: "Type",
       flex: 1,
     },
     {
-      field: "Statut du collaborateur",
-      headerName: "Statut du collaborateur",
+      field: "Société",
+      headerName: "Société",
       flex: 1,
     },
     {
-      field: "N° SIRET",
-      headerName: "N° SIRET",
+      field: "Statut",
+      headerName: "Statut",
       flex: 1,
     },
     {
-      field: "Forme juridique",
-      headerName: "Forme juridique",
+      field: "Date debut",
+      headerName: "Date debut",
       flex: 1,
     },
     {
-      field: "phone",
-      headerName: "Phone Number",
+      field: "Date fin",
+      headerName: "Date fin",
       flex: 1,
     },
     {
-      field: "Code NAF",
-      headerName: "Code NAF",
+      field: "Salaire Brut Annuel",
+      headerName: "Salaire Brut Annuel",
       flex: 1,
     },
     {
-      field: "TVA",
-      headerName: "TVA",
+      field: "Salaire Mensuel Net",
+      headerName: "Salaire Mensuel Net",
+      flex: 1,
+    },
+    {
+      field: "Charge Mensuel Patronale",
+      headerName: "Charge Mensuel Patronale",
       flex: 1,
     },
 

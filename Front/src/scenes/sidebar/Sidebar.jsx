@@ -22,6 +22,7 @@ import WorkIcon from '@mui/icons-material/Work';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import RequestPageIcon from '@mui/icons-material/RequestPage';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import logoEtixway from './logo.png';
 
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -86,9 +87,7 @@ const Sidebar = () => {
                 alignItems="center"
                 ml="15px"
               >
-                <Typography variant="h3" color={colors.grey[100]}>
-                  ETIXWAY
-                </Typography>
+                <img src={logoEtixway} alt="Etixway Logo" style={{ height: '30px' }} />
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
                 </IconButton>
