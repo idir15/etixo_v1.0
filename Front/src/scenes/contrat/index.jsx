@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { Box } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
@@ -19,6 +19,7 @@ const Contrat = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [open, setOpen] = useState(false);
+  const [contracts, setContracts] = useState([]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -37,53 +38,76 @@ const Contrat = () => {
     
     console.log("Modifier l'élément avec l'ID :", id);
   };
+  const getAllContracts = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/v1/getAllContracts");
+      if (response.ok) {
+        const data = await response.json();
+        return data;
+      } else {
+        console.error("Failed to fetch contracts");
+        return [];
+      }
+    } catch (error) {
+      console.error("Error fetching contracts:", error);
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const contractsData = await getAllContracts();
+      setContracts(contractsData);
+    };
+    fetchData();
+  }, []);
 
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
-    { field: "Référence du Contrat", headerName: "Référence du Contrat" },
+    { field: "reference", headerName: "Référence du Contrat" },
     {
-      field: "Collaborateur",
+      field: "collaborator",
       headerName: "Collaborateur",
       flex: 1,
       cellClassName: "name-column--cell",
     },
     {
-      field: "Type",
+      field: "contractType",
       headerName: "Type",
       flex: 1,
     },
     {
-      field: "Société",
+      field: "company",
       headerName: "Société",
       flex: 1,
     },
     {
-      field: "Statut",
+      field: "status",
       headerName: "Statut",
       flex: 1,
     },
     {
-      field: "Date debut",
-      headerName: "Date debut",
+      field: "startDate",
+      headerName: "Date début",
       flex: 1,
     },
     {
-      field: "Date fin",
+      field: "endDate",
       headerName: "Date fin",
       flex: 1,
     },
     {
-      field: "Salaire Brut Annuel",
+      field: "annualGrossSalary",
       headerName: "Salaire Brut Annuel",
       flex: 1,
     },
     {
-      field: "Salaire Mensuel Net",
+      field: "monthlyNetSalary",
       headerName: "Salaire Mensuel Net",
       flex: 1,
     },
     {
-      field: "Charge Mensuel Patronale",
+      field: "monthlyEmployerCharge",
       headerName: "Charge Mensuel Patronale",
       flex: 1,
     },
@@ -164,8 +188,8 @@ const Contrat = () => {
 </div>
 
 
-          <DataGrid
-            rows={mockDataContacts}
+<DataGrid
+            rows={contracts}
             columns={columns}
             components={{ Toolbar: GridToolbar }}
           />
