@@ -22,7 +22,6 @@ import WorkIcon from '@mui/icons-material/Work';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import RequestPageIcon from '@mui/icons-material/RequestPage';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
-import logoEtixway from './logo.png';
 
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -53,7 +52,7 @@ const Sidebar = () => {
     <Box
     sx={{
       "& .pro-sidebar-inner": {
-        background: "#82C9D1 !important", // couleur 
+        background: "#82C9D1 !important", // Utilisation de la couleur hexadécimale directement
       },
       "& .pro-icon-wrapper": {
         backgroundColor: "transparent !important",
@@ -62,7 +61,7 @@ const Sidebar = () => {
         padding: "5px 35px 5px 20px !important",
       },
       "& .pro-inner-item:hover": {
-        color: "#1C3A88 !important",
+        color: "#868dfb !important",
       },
       "& .pro-menu-item.active": {
         color: "#6870fa !important",
@@ -87,9 +86,9 @@ const Sidebar = () => {
                 alignItems="center"
                 ml="15px"
               >
-
-                <img src={logoEtixway} alt="Etixway Logo" style={{ height: '30px' }} /> {/* Ajoutez style si nécessaire */}
-
+                <Typography variant="h3" color={colors.grey[100]}>
+                  ETIXWAY
+                </Typography>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
                 </IconButton>
@@ -125,9 +124,7 @@ const Sidebar = () => {
             <Item
               title="Collaborateur"
               to="/collaborator"
-
               icon={<PeopleAltIcon />}
-
               selected={selected}
               setSelected={setSelected}
             />

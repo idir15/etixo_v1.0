@@ -13,9 +13,13 @@ import CompanyForm from "./companyForm";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
+import { tokens } from "../../theme";
+import Header from "../../components/Header";
+
 
 const Company = () => {
   const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   const [open, setOpen] = useState(false);
   const [companies, setCompanies] = useState([]);
 
@@ -86,6 +90,10 @@ const Company = () => {
   return (
     <>
       <Box m="20px">
+      <Header
+          title="Companies"
+          subtitle="Liste des Compagnies"
+        />
         <div>
           <CompanyForm open={open} handleClose={handleClose} />
         </div>
@@ -93,6 +101,34 @@ const Company = () => {
         <Box
           m="40px 0 0 0"
           height="75vh"
+          sx={{
+            "& .MuiDataGrid-root": {
+              border: "none",
+            },
+            "& .MuiDataGrid-cell": {
+              borderBottom: "none",
+            },
+            "& .name-column--cell": {
+              color: colors.greenAccent[300],
+            },
+            "& .MuiDataGrid-columnHeaders": {
+              backgroundColor: "#82CFD8",
+              borderBottom: "none",
+            },
+            "& .MuiDataGrid-virtualScroller": {
+              backgroundColor: colors.primary[400],
+            },
+            "& .MuiDataGrid-footerContainer": {
+              borderTop: "none",
+              backgroundColor: "#82C9D1",
+            },
+            "& .MuiCheckbox-root": {
+              color: `${colors.greenAccent[200]} !important`,
+            },
+            "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
+              color: `${colors.grey[100]} !important`,
+            },
+          }}
         >
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
             <Button
