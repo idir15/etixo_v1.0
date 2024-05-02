@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import {
   Button,
@@ -20,6 +19,7 @@ const Collaborator = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [open, setOpen] = useState(false);
+  const [contacts, setContacts] = useState(mockDataContacts); // Utilisation de l'état pour les données des collaborateurs
 
   const handleOpen = () => {
     setOpen(true);
@@ -28,64 +28,51 @@ const Collaborator = () => {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleDelete = (id) => {
-    
-    console.log("Supprimer l'élément avec l'ID :", id);
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/v1/deleteCollaborator/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        console.log('Collaborateur supprimé avec succès');
+        // Supprimer la ligne de données correspondante des collaborateurs
+        const updatedContacts = contacts.filter(contact => contact.id !== id);
+        // Mettre à jour l'état avec les données mises à jour
+        setContacts(updatedContacts);
+      } else {
+        console.error('Erreur lors de la suppression du collaborateur');
+      }
+    } catch (error) {
+      console.error('Erreur réseau', error);
+    }
   };
 
   const handleEdit = (id) => {
-    
     console.log("Modifier l'élément avec l'ID :", id);
   };
 
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
-    
+    { field: "name", headerName: "Nom", flex: 1 },
+    { field: "lastname", headerName: "Prénom", flex: 1 },
+    { field: "statut", headerName: "Statut", flex: 1 },
+    { field: "startDate", headerName: "Date début contrat", flex: 1 }, 
+    { field: "endDate", headerName: "Date fin contrat", flex: 1 },
     {
-      field: "name",
-      headerName: "Nom",
-      flex: 1,
-     
+      field: "actions",
+      headerName: "Actions",
+      flex: 0.3,
+      renderCell: (params) => (
+        <>
+          <Button onClick={() => handleEdit(params.row.id)} startIcon={<EditIcon />}>
+          </Button>
+          <Button onClick={() => handleDelete(params.row.id)} startIcon={<DeleteIcon />}>
+          </Button>
+        </>
+      ),
     },
-    {
-        field: "lastname",
-        headerName: "Prénom",
-        flex: 1,
-        
-      },
-      {
-        field: "statut",
-        headerName: "Statut",
-        flex: 1,
-        
-      },
-      { field: "startDate",
-       headerName: "Date début contrat",
-        flex: 1 }, 
-
-     { field: "endDate", 
-       headerName: "Date fin contrat",
-       flex: 1 
-      },
-
-      {
-        field: "actions",
-        headerName: "Actions",
-        flex: 0.3,
-        
-        renderCell: (params) => (
-          <>
-            <Button onClick={() => handleEdit(params.row.id)} startIcon={<EditIcon />}>
-            </Button>
-
-            <Button onClick={() => handleDelete(params.row.id)} startIcon={<DeleteIcon />}>
-            </Button>
-            
-          </>
-        ),
-      },
-    
-    
   ];
 
   return (
@@ -95,8 +82,6 @@ const Collaborator = () => {
           title="Collaborateur"
           subtitle="Liste des collaborateurs"
         />
-      
-
         <Box
           m="40px 0 0 0"
           height="75vh"
@@ -130,7 +115,7 @@ const Collaborator = () => {
           }}
         >
           <DataGrid
-            rows={mockDataContacts}
+            rows={contacts} // Utilisation de l'état pour les données des collaborateurs
             columns={columns}
             components={{ Toolbar: GridToolbar }}
           />

@@ -39,7 +39,7 @@ const CompanyForm = ({ open, handleClose }) => {
         }
       }}>
 
-      <DialogTitle sx={{ backgroundColor: "#0c54fa", color: "#fff" }}>
+      <DialogTitle sx={{ backgroundColor: "#06668C", color: "#fff" }}>
         Nouvelle Compagnie
       </DialogTitle>
       <DialogContent>
@@ -102,8 +102,8 @@ const CompanyForm = ({ open, handleClose }) => {
           <Grid container spacing={3} mb={4}>
             <Grid item xs={6}>
               <TextField
-                label="Nom du responsable"
-                placeholder="Nom du responsable"
+                label="Nom de responsable"
+                placeholder="Nom de responsable"
                 fullWidth
                 name="nomResponsable"
                 color="success"
@@ -160,8 +160,8 @@ const CompanyForm = ({ open, handleClose }) => {
           <Grid container spacing={3}>
             <Grid item xs={6}>
               <TextField
-                label="TVA Intracom"
-                placeholder="TVA Intracom"
+                label="TVA"
+                placeholder="TVA Intra"
                 fullWidth
                 name="tva"
                 color="success"
@@ -170,8 +170,8 @@ const CompanyForm = ({ open, handleClose }) => {
             </Grid>
             <Grid item xs={6}>
               <TextField
-                label="TVA Intra Societe"
-                placeholder="TVA Intra Societe"
+                label="TVA"
+                placeholder="TVA Intra"
                 fullWidth
                 name="tva"
                 color="success"

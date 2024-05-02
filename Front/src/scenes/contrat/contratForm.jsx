@@ -39,8 +39,8 @@ const ContratForm = ({ open, handleClose }) => {
         }
       }}>
 
-      <DialogTitle sx={{ backgroundColor: "#0c54fa", color: "#fff" }}>
-        Nouvelle Contrat
+      <DialogTitle sx={{ backgroundColor: "#82C9D1", color: "#fff" }}>
+        Nouveau Contrat
       </DialogTitle>
       <DialogContent>
         <CardContent >

@@ -65,7 +65,7 @@ const Sidebar = () => {
         color: "#1C3A88 !important",
       },
       "& .pro-menu-item.active": {
-        color: "#6870fa !important",
+        color: "#868484 !important",
       },
     }}
     >
