@@ -259,6 +259,9 @@ const ContratForm = ({ open, handleClose }) => {
         <Button onClick={handleSubmit}  color="primary">
           Soumettre
         </Button>
+        <Button onClick={handleSubmit}  color="primary">
+          Nouveau Collaborateur
+        </Button>
       </DialogActions>
     </Dialog>
   );
