@@ -69,11 +69,13 @@ const CompanyForm = ({ open, handleClose }) => {
         "& .MuiDialog-paper": {
           width: "70%",
           maxWidth: "none",
-          maxHeight: "70vh",
-        },
-      }}
-    >
-      <DialogTitle sx={{ backgroundColor: "#0c54fa", color: "#fff" }}>
+
+          maxHeight: "70vh"
+        }
+      }}>
+
+      <DialogTitle sx={{ backgroundColor: "#06668C", color: "#fff" }}>
+
         Nouvelle Compagnie
       </DialogTitle>
       <DialogContent>
@@ -125,8 +127,10 @@ const CompanyForm = ({ open, handleClose }) => {
             </Grid>
             <Grid item xs={6}>
               <TextField
+
                 label="Responsable"
                 placeholder="Responsable"
+
                 fullWidth
                 name="responsable"
                 value={companyData.responsable}
@@ -177,8 +181,8 @@ const CompanyForm = ({ open, handleClose }) => {
             </Grid>
             <Grid item xs={6}>
               <TextField
-                label="TVA Intracom"
-                placeholder="TVA Intracom"
+                label="TVA"
+                placeholder="TVA Intra"
                 fullWidth
                 name="tvaIntracom"
                 value={companyData.tvaIntracom}
@@ -187,8 +191,8 @@ const CompanyForm = ({ open, handleClose }) => {
             </Grid>
             <Grid item xs={6}>
               <TextField
-                label="TVA Intra Societe"
-                placeholder="TVA Intra Societe"
+                label="TVA"
+                placeholder="TVA Intra"
                 fullWidth
                 name="tvaIntraSociete"
                 value={companyData.tvaIntraSociete}

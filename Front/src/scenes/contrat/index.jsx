@@ -154,7 +154,7 @@ const Contrat = () => {
 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
   <Button
     variant="contained"
-    style={{ backgroundColor: '#06668C', color: '#FFFFFF' }} // Utilisez la couleur rouge avec une valeur hexadécimale
+    style={{ backgroundColor: '#82C9D1', color: '#FFFFFF' }} // Utilisez la couleur rouge avec une valeur hexadécimale
     size="large"
     onClick={handleOpen}
     startIcon={<AddIcon />}
