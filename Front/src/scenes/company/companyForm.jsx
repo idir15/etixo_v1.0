@@ -1,7 +1,4 @@
-import React from "react";
-import { useState } from 'react';
-import FormatBoldIcon from '@mui/icons-material/FormatBold';
-import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
+import React, { useState } from "react";
 import {
   Button,
   CardContent,
@@ -13,39 +10,77 @@ import {
   DialogActions,
   ToggleButtonGroup,
   ToggleButton,
-
-
 } from "@mui/material";
 
 const CompanyForm = ({ open, handleClose }) => {
-    const [alignment, setAlignment] = useState('esn');
+  const [companyData, setCompanyData] = useState({
+    name: "",
+    address: "",
+    responsable: "",
+    email: "",
+    siret: "",
+    legalStatus: "",
+    phone: "",
+    naf: "",
+    tvaIntracom: "",
+    tvaIntraSociete: "",
+  });
 
-    const handleChange = (event, newAlignment) => {
-      if (newAlignment !== null) {
-        setAlignment(newAlignment);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCompanyData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/v1/addCompany", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(companyData),
+      });
+
+      if (response.ok) {
+        console.log("Company added successfully");
+        handleClose();
+      } else {
+        console.error("Failed to add company");
       }
-    };
-    const [formats, setFormats] = React.useState(() => ['bold', 'italic']);
+    } catch (error) {
+      console.error("Error adding company:", error);
+    }
+  };
+  const [formats, setFormats] = React.useState(() => []);
 
-    const handleFormat = (event, newFormats) => {
-      setFormats(newFormats);
-    };
+  const handleFormat = (event, newFormats) => {
+    setFormats(newFormats);
+  };
   return (
-    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="lg" sx={{
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      fullWidth
+      maxWidth="lg"
+      sx={{
         "& .MuiDialog-paper": {
           width: "70%",
           maxWidth: "none",
+
           maxHeight: "70vh"
         }
       }}>
 
       <DialogTitle sx={{ backgroundColor: "#06668C", color: "#fff" }}>
+
         Nouvelle Compagnie
       </DialogTitle>
       <DialogContent>
-        <CardContent >
-          <br />
-          <label>
+        <CardContent>
+                    <label>
           Type:
           <ToggleButtonGroup
       value={formats}
@@ -53,7 +88,7 @@ const CompanyForm = ({ open, handleClose }) => {
       aria-label="text formatting"
       sx={{ marginBottom: '18px', width: '100%' }}
     >
-      <ToggleButton value="italic" aria-label="italic"
+      <ToggleButton value="true" aria-label="italic"
                 sx={{
                     width: '10%',
                     fontSize: '18px',
@@ -69,23 +104,15 @@ const CompanyForm = ({ open, handleClose }) => {
       </ToggleButton>
     </ToggleButtonGroup>
         </label>
-
-
-<br />
-          <Grid container spacing={3} mb={4}>
+          <Grid container spacing={3}>
             <Grid item xs={6}>
               <TextField
-               id="outlined-multiline-flexible"
                 label="Nom de l'entreprise"
                 placeholder="Nom de l'entreprise"
                 fullWidth
-                name="nom"
-                color="success"
-                sx={{ 
-                    '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' },
-                    '& .MuiInputLabel-root': { fontSize: '18px' },
-                    '& .MuiOutlinedInput-input': { padding: '14.5px 16px' } // Ajustez le padding selon vos besoins
-                  }}
+                name="name"
+                value={companyData.name}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={6}>
@@ -93,37 +120,34 @@ const CompanyForm = ({ open, handleClose }) => {
                 label="Adresse"
                 placeholder="Adresse"
                 fullWidth
-                name="adresse"
-                color="success"
-                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+                name="address"
+                value={companyData.address}
+                onChange={handleChange}
               />
             </Grid>
-          </Grid>
-          <Grid container spacing={3} mb={4}>
             <Grid item xs={6}>
               <TextField
-                label="Nom de responsable"
-                placeholder="Nom de responsable"
+
+                label="Responsable"
+                placeholder="Responsable"
+
                 fullWidth
-                name="nomResponsable"
-                color="success"
-                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+                name="responsable"
+                value={companyData.responsable}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={6}>
               <TextField
                 label="Email"
-                placeholder="email@example.com"
+                placeholder="Email"
                 fullWidth
                 type="email"
                 name="email"
-                color="success"
-                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+                value={companyData.email}
+                onChange={handleChange}
               />
             </Grid>
-          </Grid>
-
-          <Grid container spacing={2} mb={4}>
             <Grid item xs={4}>
               <TextField
                 label="N° SIRET"
@@ -131,8 +155,8 @@ const CompanyForm = ({ open, handleClose }) => {
                 fullWidth
                 type="number"
                 name="siret"
-                color="success"
-                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+                value={companyData.siret}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={4}>
@@ -140,9 +164,9 @@ const CompanyForm = ({ open, handleClose }) => {
                 label="Forme juridique"
                 placeholder="Forme juridique"
                 fullWidth
-                name="formeJuridique"
-                color="success"
-                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+                name="legalStatus"
+                value={companyData.legalStatus}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={4}>
@@ -150,22 +174,9 @@ const CompanyForm = ({ open, handleClose }) => {
                 label="Code NAF"
                 placeholder="Code NAF"
                 fullWidth
-                name="codeNAF"
-                color="success"
-                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
-              />
-            </Grid>
-          </Grid>
-
-          <Grid container spacing={3}>
-            <Grid item xs={6}>
-              <TextField
-                label="TVA"
-                placeholder="TVA Intra"
-                fullWidth
-                name="tva"
-                color="success"
-                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+                name="naf"
+                value={companyData.naf}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={6}>
@@ -173,9 +184,19 @@ const CompanyForm = ({ open, handleClose }) => {
                 label="TVA"
                 placeholder="TVA Intra"
                 fullWidth
-                name="tva"
-                color="success"
-                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+                name="tvaIntracom"
+                value={companyData.tvaIntracom}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="TVA"
+                placeholder="TVA Intra"
+                fullWidth
+                name="tvaIntraSociete"
+                value={companyData.tvaIntraSociete}
+                onChange={handleChange}
               />
             </Grid>
           </Grid>
@@ -185,7 +206,7 @@ const CompanyForm = ({ open, handleClose }) => {
         <Button onClick={handleClose} color="secondary">
           Annuler
         </Button>
-        <Button  color="primary">
+        <Button onClick={handleSubmit} color="primary">
           Soumettre
         </Button>
       </DialogActions>
