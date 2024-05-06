@@ -1,7 +1,4 @@
-import React from "react";
-import { useState } from 'react';
-import FormatBoldIcon from '@mui/icons-material/FormatBold';
-import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
+import React, { useState } from "react";
 import {
   Button,
   CardContent,
@@ -11,181 +8,211 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  ToggleButtonGroup,
-  ToggleButton,
-
-
+  Autocomplete,
 } from "@mui/material";
 
 const CollaboratorForm = ({ open, handleClose }) => {
-    const [alignment, setAlignment] = useState('esn');
-    const [collaboratorData, setCollaboratorData] = useState({
-        name: "",
-        address: "",
-        responsable: "",
-        email: "",
-        siret: "",
-        legalStatus: "",
-        phone: "",
-        naf: "",
-        tvaIntracom: "",
-        tvaIntraSociete: "",
-      });
+  const [collaboratorData, setCollaboratorData] = useState({
+    name: "",
+    firstName: "",
+    address: "",
+    dateOfBirth: "",
+    nationality: "",
+    phone: "",
+    email: "",
+    companyName: "",
+    socialSecurityNumber: "",
+  });
 
-    const handleChange = (event, newAlignment) => {
-      if (newAlignment !== null) {
-        setAlignment(newAlignment);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCollaboratorData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+  const sendDataToParent = (data) => {
+    // Mettre à jour l'état du parent avec les données du collaborateur
+    setCollaboratorData(data);
+  };
+  
+  const handleSubmit = async () => {
+    try {
+      if (collaboratorData.name && collaboratorData.firstName && collaboratorData.address) {
+        console.log("Données du collaborateur:", collaboratorData);
+        handleClose();
+        // Passez les données du collaborateur au parent
+      sendDataToParent(collaboratorData);
+      } else {
+        console.error("Veuillez remplir tous les champs obligatoires");
       }
-    };
-    const [formats, setFormats] = React.useState(() => ['bold', 'italic']);
+      
+    } catch (error) {
+      console.error("Erreur lors de l'ajout du collaborateur:", error);
+    }
+  };
 
-    const handleFormat = (event, newFormats) => {
-      setFormats(newFormats);
-    };
+  
+
+  // Liste des nationalités
+  const nationalites = [
+    "France", "Algérie", "Maroc", "Suisse", "Belgique", "Espagne", "Italie" /* Ajoutez d'autres nationalités ici */
+  ];
+
   return (
-    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="lg" sx={{
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      fullWidth
+      maxWidth="lg"
+      sx={{
         "& .MuiDialog-paper": {
           width: "70%",
           maxWidth: "none",
-          maxHeight: "70vh"
-        }
-      }}>
-
-
+          maxHeight: "70vh",
+        },
+      }}
+    >
       <DialogTitle sx={{ backgroundColor: "#82C9D1", color: "#fff" }}>
-
         Nouveau Collaborateur
       </DialogTitle>
       <DialogContent>
-        <CardContent >
-
-
-
-
-<br />
+        <CardContent>
           <Grid container spacing={3} mb={4}>
             <Grid item xs={6}>
               <TextField
-               id="outlined-multiline-flexible"
                 label="Nom Collaborateur"
                 placeholder="Nom Collaborateur"
                 fullWidth
-                name="Nom Collaborateur"
+                name="name"
+                value={collaboratorData.name}
                 color="success"
-                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
-               
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={6}>
               <TextField
-               id="outlined-multiline-flexible"
                 label="Prénom Collaborateur"
                 placeholder="Prénom Collaborateur"
                 fullWidth
-                name="Prénom Collaborateur"
+                name="firstName"
+                value={collaboratorData.firstName}
                 color="success"
-                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
-               
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                label="Adresse Collaborateur"
-                placeholder="Adresse Collaborateur"
-                fullWidth
-                name="Adresse Collaborateur"
-                color="success"
-                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+                onChange={handleChange}
               />
             </Grid>
           </Grid>
-          
           <Grid container spacing={3} mb={4}>
             <Grid item xs={6}>
               <TextField
+                name="dateOfBirth"
                 label="Date de Naissance"
-                placeholder="Date de Naissance"
-                fullWidth
                 type="date"
-                name="Date de Naissance"
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                value={collaboratorData.dateOfBirth}
                 color="success"
-                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={6}>
-              <TextField
-                label="Nationalité"
-                placeholder="Nationalité"
-                fullWidth
-                name="Nationalité"
-                color="success"
-                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+              <Autocomplete
+                freeSolo
+                options={nationalites}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Nationalité"
+                    placeholder="Nationalité"
+                    fullWidth
+                    name="nationality"
+                    value={collaboratorData.nationality}
+                    color="success"
+                    onChange={handleChange}
+                  />
+                )}
               />
             </Grid>
           </Grid>
-
-          <Grid container spacing={3} mb={4}>
-            <Grid item xs={6}>
-              <TextField
-                label="Téléphone"
-                placeholder="Téléphone"
-                fullWidth
-                type="number"
-                name="Téléphone"
-                color="success"
-                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                label="Email"
-                placeholder="Email"
-                fullWidth
-                type="email"
-                name="Email"
-                color="success"
-                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
-              />
-            </Grid>
-          </Grid>
-
-          <Grid container spacing={3} mb={4}>
-            <Grid item xs={6}>
-              <TextField
-                label="Nom Compagnie"
-                placeholder="Nom Compagnie"
-                fullWidth
-                name="Nom Compagnie"
-                color="success"
-                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                label="Numéro Securité Sociale"
-                placeholder="Numero Securité Sociale"
-                fullWidth
-                type="number"
-                name="Numero Securité Sociale"
-                color="success"
-                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
-              />
-            </Grid>
-          </Grid>
-
-          
-           
-            
-
          
-           
+          <Grid container spacing={3} mb={4}>
+          
+          <Grid item xs={4}>
+            <TextField
+              label="Téléphone"
+              placeholder="Téléphone"
+              fullWidth
+              type="number"
+              name="phone"
+              value={collaboratorData.phone}
+              color="success"
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <TextField
+              label="Email"
+              placeholder="Email"
+              fullWidth
+              type="email"
+              name="email"
+              value={collaboratorData.email}
+              color="success"
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <TextField
+              label="Numéro Securité Sociale"
+              placeholder="Numero Securité Sociale"
+              fullWidth
+              type="number"
+              name="socialSecurityNumber"
+              value={collaboratorData.socialSecurityNumber}
+              color="success"
+              onChange={handleChange}
+            />
+          </Grid>
+          
+        </Grid>
+
+
+        <Grid container spacing={3} mb={4}>
+        <Grid item xs={6}>
+            <TextField
+              label="Adresse Collaborateur"
+              placeholder="Adresse Collaborateur"
+              fullWidth
+              name="address"
+              value={collaboratorData.address}
+              color="success"
+              onChange={handleChange}
+            />
+          </Grid>
+          
+          <Grid item xs={6}>
+            <TextField
+              label="Nom Compagnie"
+              placeholder="Nom Compagnie"
+              fullWidth
+              name="companyName"
+              value={collaboratorData.companyName}
+              color="success"
+              onChange={handleChange}
+            />
+          </Grid>
+          
+        
+        </Grid>
         </CardContent>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="secondary">
           Annuler
         </Button>
-        <Button  color="primary">
+        <Button onClick={handleSubmit} color="primary">
           Soumettre
         </Button>
       </DialogActions>

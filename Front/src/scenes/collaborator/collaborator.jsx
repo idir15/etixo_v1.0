@@ -113,10 +113,10 @@ const Collaborator = () => {
       <Box m="20px">
         <Header
           title="Collaborateur"
-          subtitle="Liste des collaborateurs"
+        
         />
         <Box
-          m="40px 0 0 0"
+          m="30px 0 0 0"
           height="75vh"
           sx={{
             "& .MuiDataGrid-root": {
@@ -131,6 +131,7 @@ const Collaborator = () => {
             "& .MuiDataGrid-columnHeaders": {
               backgroundColor: "#82CFD8",
               borderBottom: "none",
+              fontSize: "16px !important",
             },
             "& .MuiDataGrid-virtualScroller": {
               backgroundColor: colors.primary[400],
@@ -144,6 +145,7 @@ const Collaborator = () => {
             },
             "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
               color: `${colors.grey[100]} !important`,
+              fontSize: "14px !important",
             },
           }}
         >
@@ -151,6 +153,11 @@ const Collaborator = () => {
             rows={collaborator}
             columns={columns}
             components={{ Toolbar: GridToolbar }}
+            sx={{
+              "& .MuiDataGrid-cell": {
+                fontSize: "16px !important",
+              },
+            }}
           />
         </Box>
       </Box>
