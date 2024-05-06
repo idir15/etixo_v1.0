@@ -29,8 +29,28 @@ const ContratForm = ({ open, handleClose }) => {
   });
 
   const [openCollaboratorForm, setOpenCollaboratorForm] = useState(false);
-  const [collaborators, setCollaborators] = useState([]);
+
   const [collaboratorData, setCollaboratorData] = useState(null);
+
+  const [collaborators, setCollaborators] = useState([]); // Liste des collaborateurs
+
+  useEffect(() => {
+    fetchCollaborators(); // Appel à la fonction pour récupérer la liste des collaborateurs au chargement du composant
+  }, []);
+
+  const fetchCollaborators = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/v1/getAllcollaborator");
+      if (response.ok) {
+        const data = await response.json();
+        setCollaborators(data); // Stockage de la liste des collaborateurs dans l'état local
+      } else {
+        console.error("Failed to fetch collaborators");
+      }
+    } catch (error) {
+      console.error("Error fetching collaborators:", error);
+    }
+  };
 
   useEffect(() => {
     if (collaboratorData) {
@@ -137,25 +157,22 @@ const ContratForm = ({ open, handleClose }) => {
     />
   </Grid>
   <Grid item xs={6}>
-    <Select
-      label="Collaborateur"
-      placeholder="Collaborateur"
-      fullWidth
-      name="collaborator"
-      value={contractData.collaborator}
-      InputLabelProps={{
-        shrink: true,
-      }}
-      onChange={handleChange}
-      color="success"
-      sx={{ "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input": { fontSize: "18px" } }}
-    >
-      {collaborators.map((collaborator) => (
-        <MenuItem key={collaborator.id} value={collaborator.id}>
-          {collaborator.name} {collaborator.firstname}
-        </MenuItem>
-      ))}
-    </Select>
+  <Select
+                label="Collaborateur"
+                placeholder="Collaborateur"
+                fullWidth
+                name="collaborator"
+                value={contractData.collaborator}
+                onChange={handleChange}
+                color="success"
+                sx={{ "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input": { fontSize: "18px" } }}
+              >
+                {collaborators.map((collaborator) => (
+                  <MenuItem key={collaborator.id} value={collaborator.id}>
+                    {collaborator.name} {/* Remplacer "name" par le nom de votre attribut dans la réponse */}
+                  </MenuItem>
+                ))}
+              </Select>
   </Grid>
 </Grid>
 
