@@ -134,10 +134,10 @@ const Contrat = () => {
           title="CONTRATS"
         />
  
-        <div>
-        {open && <ContratForm handleClose={handleClose} contract={contractToEdit} />}
+ <div>
+          <ContratForm open={open} handleClose={handleClose} />
         </div>
- 
+
         <Box
           m="0"
           height="75vh"
