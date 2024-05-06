@@ -17,7 +17,7 @@ import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
- 
+
 const Contrat = () => {
   
   const theme = useTheme();
@@ -26,8 +26,10 @@ const Contrat = () => {
   const [contracts, setContracts] = useState([]);
   const [idToDelete, setIdToDelete] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+
   const [contractToEdit, setContractToEdit] = useState(null);
  
+
   const handleOpen = () => {
     setContractToEdit(null); // Réinitialise les détails du contrat pour un nouvel ajout
     setOpen(true);
@@ -36,7 +38,8 @@ const Contrat = () => {
   const handleClose = () => {
     setOpen(false);
   };
- 
+
+
   const handleDialogOpen = (id) => {
     setDialogOpen(true);
     setIdToDelete(id);
@@ -45,7 +48,7 @@ const Contrat = () => {
   const handleDialogClose = () => {
     setDialogOpen(false);
   };
- 
+
   const handleDelete = async () => {
     try {
       const response = await fetch(`http://localhost:8080/api/v1/deleteContract/${idToDelete}`, {
@@ -64,28 +67,12 @@ const Contrat = () => {
       console.error('Erreur réseau', error);
     }
   };
- 
-  const handleEdit = async (contractId) => {
-    try {
-      const response = await fetch(`http://localhost:8080/api/v1/updateContract/${contractId}`, {
-        method: 'PUT',
-      });
-  
-      if (response.ok) {
-        const contractData = await response.json();
-        setContractToEdit(contractData);
-        setOpen(true); // Ouvrir le formulaire de contrat pour l'édition
-      } else {
-        console.error('Failed to fetch contract details for editing');
-      }
-    } catch (error) {
-      console.error('Error fetching contract details:', error);
-    }
+
+  const handleEdit = (id) => {
+    console.log("Modifier l'élément avec l'ID :", id);
   };
-  
-  
-  
- 
+
+
   const getAllContracts = async () => {
     try {
       const response = await fetch("http://localhost:8080/api/v1/getAllContracts");
@@ -131,6 +118,7 @@ const Contrat = () => {
         <>
 
           <Button onClick={() => handleEdit(params.row.id)} startIcon={<EditIcon />} />
+
 
           <Button onClick={() => handleDialogOpen(params.row.id)} startIcon={<DeleteIcon />} />
         </>
@@ -189,7 +177,9 @@ const Contrat = () => {
             
           }}
         >
+
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1px' }}>
+
             <Button
               variant="contained"
               style={{ backgroundColor: '#06668C', color: '#FFFFFF' }}
@@ -200,7 +190,7 @@ const Contrat = () => {
               Ajouter
             </Button>
           </div>
- 
+
           <DataGrid
             rows={contracts}
             sx={{
