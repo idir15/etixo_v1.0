@@ -15,6 +15,7 @@ import {
   ToggleButton,
   Select,
   MenuItem,
+  InputLabel,
 
 
 } from "@mui/material";
@@ -59,13 +60,15 @@ const ContratForm = ({ open, handleClose }) => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (prevData) => {
     try {
       const response = await fetch("http://localhost:8080/api/v1/addContract", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+
+        
         body: JSON.stringify(contractData),
       });
 
@@ -79,6 +82,8 @@ const ContratForm = ({ open, handleClose }) => {
       console.error("Error adding contract:", error);
     }
   };
+
+
 
 
   return (
@@ -102,44 +107,43 @@ const ContratForm = ({ open, handleClose }) => {
 
 
 <br />
-          <Grid container spacing={3} mb={4}>
-            <Grid item xs={6}>
-              <TextField
-               id="outlined-multiline-flexible"
-                placeholder="Référence du Contrat"
-                name="reference"
-                label="Référence du Contrat"
-                value={contractData.reference}
-                onChange={handleChange}
-                fullWidth
-                color="success"
-                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
-                /* sx={{ 
-                    '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' },
-                    '& .MuiInputLabel-root': { fontSize: '18px' },
-                    '& .MuiOutlinedInput-input': { padding: '14.5px 16px' } // Ajustez le padding selon vos besoins
-                  }} */
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <Select
-                label="Collaborateur"
-                placeholder="Collaborateur"
-                fullWidth
-                name="collaborator"
-                value={contractData.collaborator}
-                onChange={handleChange}
-                color="success"
-                sx={{ "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input": { fontSize: "18px" } }}
-              >
-                {collaborators.map((collaborator) => (
-                  <MenuItem key={collaborator.id} value={collaborator.id}>
-                    {collaborator.name} {/* Remplacer "name" par le nom de votre attribut dans la réponse */}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Grid>
-          </Grid>
+<Grid container spacing={3} mb={4}>
+  <Grid item xs={6}>
+    <TextField
+      id="outlined-multiline-flexible"
+      placeholder="Référence du Contrat"
+      name="reference"
+      label="Référence du Contrat"
+      value={contractData.reference}
+      onChange={handleChange}
+      fullWidth
+      color="success"
+      sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+    />
+  </Grid>
+  <Grid item xs={6}>
+    <Select
+      label="Collaborateur"
+      placeholder="Collaborateur"
+      fullWidth
+      name="collaborator"
+      value={contractData.collaborator}
+      InputLabelProps={{
+        shrink: true,
+      }}
+      onChange={handleChange}
+      color="success"
+      sx={{ "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input": { fontSize: "18px" } }}
+    >
+      {collaborators.map((collaborator) => (
+        <MenuItem key={collaborator.id} value={collaborator.id}>
+          {collaborator.name} {collaborator.firstname}
+        </MenuItem>
+      ))}
+    </Select>
+  </Grid>
+</Grid>
+
           <Grid container spacing={3} mb={4}>
           <Grid item xs={4}>
               <TextField

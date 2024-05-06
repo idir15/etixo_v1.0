@@ -1,7 +1,8 @@
 package com.etixway.etixo.model;
 
 import jakarta.persistence.*;
-import java.util.Date;
+import java.sql.Date; // Importer java.sql.Date
+import java.text.SimpleDateFormat;
 
 @Entity
 public class Contract {
@@ -17,10 +18,10 @@ public class Contract {
     private String contractType;
 
     @Column(name = "start_date")
-    private Date startDate;
+    private Date startDate; // Utiliser java.sql.Date
 
     @Column(name = "end_date")
-    private Date endDate;
+    private Date endDate; // Utiliser java.sql.Date
 
     @Column(name = "annual_gross_salary")
     private double annualGrossSalary;
@@ -90,14 +91,20 @@ public class Contract {
         this.monthlyNetSalary = monthlyNetSalary;
     }
 
+    // Méthode pour formater la date
+    public String formatDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        return sdf.format(date);
+    }
+
     @Override
     public String toString() {
         return "Contract{" +
                 "id=" + id +
                 ", reference='" + reference + '\'' +
                 ", contractType='" + contractType + '\'' +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
+                ", startDate=" + formatDate(startDate) +
+                ", endDate=" + formatDate(endDate) +
                 ", annualGrossSalary=" + annualGrossSalary +
                 ", monthlyNetSalary=" + monthlyNetSalary +
                 '}';

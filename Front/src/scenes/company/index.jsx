@@ -94,16 +94,16 @@ const Company = () => {
   };
  
   const columns = [
-    { field: "id", headerName: "ID", flex: 0.5 },
+    
     { field: "name", headerName: "Nom", flex: 1 },
-    { field: "address", headerName: "Adresse", flex: 1 },
+    { field: "address", headerName: "Adresse", flex: 1,hide: true },
     { field: "responsable", headerName: "Responsable", flex: 1 },
     { field: "email", headerName: "Email", flex: 1 },
     { field: "siret", headerName: "N° SIRET", flex: 1 },
-    { field: "legalStatus", headerName: "Forme juridique", flex: 1 },
+    { field: "legalStatus", headerName: "Forme juridique", flex: 1, hide: true },
     { field: "phone", headerName: "Numero téléphone", flex: 1 },
-    { field: "naf", headerName: "Code NAF", flex: 1 },
-    { field: "tva", headerName: "TVA", flex: 1 },
+    { field: "naf", headerName: "Code NAF", flex: 1, hide: true },
+    { field: "tva", headerName: "TVA", flex: 1, hide: true },
     {
       field: "actions",
       headerName: "Actions",
@@ -122,14 +122,13 @@ const Company = () => {
       <Box m="20px">
       <Header
           title="Companies"
-          subtitle="Liste des Compagnies"
         />
         <div>
           <CompanyForm open={open} handleClose={handleClose} />
         </div>
  
         <Box
-          m="40px 0 0 0"
+          m="0"
           height="75vh"
           sx={{
             "& .MuiDataGrid-root": {
@@ -144,6 +143,7 @@ const Company = () => {
             "& .MuiDataGrid-columnHeaders": {
               backgroundColor: "#82CFD8",
               borderBottom: "none",
+              fontSize: "16px !important",
             },
             "& .MuiDataGrid-virtualScroller": {
               backgroundColor: colors.primary[400],
@@ -157,6 +157,7 @@ const Company = () => {
             },
             "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
               color: `${colors.grey[100]} !important`,
+              fontSize: "14px !important",
             },
           }}
         >
@@ -176,6 +177,11 @@ const Company = () => {
             rows={companies}
             columns={columns}
             components={{ Toolbar: GridToolbar }}
+            sx={{
+              "& .MuiDataGrid-cell": {
+                fontSize: "16px !important",
+              },
+            }}
           />
         </Box>
       </Box>
