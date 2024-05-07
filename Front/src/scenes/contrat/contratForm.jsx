@@ -13,6 +13,7 @@ import {
   Select,
   MenuItem,
   InputLabel, 
+  Autocomplete,
 } from "@mui/material";
 import CollaboratorForm from "../collaborator/collaboratorForm";
 
@@ -131,7 +132,7 @@ const ContratForm = ({ open, handleClose }) => {
         maxHeight: "70vh"
       }
     }}>
-      <DialogTitle sx={{ backgroundColor: "#82C9D1", color: "#fff" }}>
+      <DialogTitle sx={{ backgroundColor: "#048B9A", color: "#fff" }}>
         Nouveau Contrat
       </DialogTitle>
       <DialogContent>
@@ -157,23 +158,24 @@ const ContratForm = ({ open, handleClose }) => {
     />
   </Grid>
   <Grid item xs={6}>
-  <Select
-                label="Collaborateur"
-                placeholder="Collaborateur"
-                fullWidth
-                name="collaborator"
-                value={contractData.collaborator}
-                onChange={handleChange}
-                color="success"
-                sx={{ "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input": { fontSize: "18px" } }}
-              >
-                {collaborators.map((collaborator) => (
-                  <MenuItem key={collaborator.id} value={collaborator.id}>
-                    {collaborator.name} {/* Remplacer "name" par le nom de votre attribut dans la réponse */}
-                  </MenuItem>
-                ))}
-              </Select>
-  </Grid>
+        <Autocomplete
+          freeSolo
+          options={collaborators}
+          getOptionLabel={(option) => `${option.name} ${option.firstname}`} 
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Collaborateur"
+              placeholder="Collaborateur"
+              fullWidth
+              name="collaborator"
+              value={collaboratorData}
+              onChange={handleChange}
+              sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+            />
+          )}
+        />
+      </Grid>
 </Grid>
 
           <Grid container spacing={3} mb={4}>
@@ -248,76 +250,6 @@ const ContratForm = ({ open, handleClose }) => {
           </Grid>
 
 
-        <Grid container spacing={3} mb={4}>
-        <Grid item xs={4}>
-            <TextField
-              label="Type de Contrat"
-              placeholder="Type de Contrat"
-              fullWidth
-              name="contractType"
-              value={contractData.contractType}
-              onChange={handleChange}
-              color="success"
-              sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
-            />
-          </Grid>
-          <Grid item xs={4}>
-            <TextField
-              label="Nom de Société du collaborateur"
-              placeholder="Société du collaborateur"
-              fullWidth
-              name="company"
-              value={contractData.company}
-              onChange={handleChange}
-              color="success"
-              sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
-            />
-          </Grid>
-          <Grid item xs={4}>
-            <TextField
-              label="Statut du collaborateur"
-              placeholder="Statut du collaborateur"
-              fullWidth
-              name="statut"
-              value={contractData.status}
-              onChange={handleChange}
-              color="success"
-              sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
-            />
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} mb={4}>
-          <Grid item xs={6}>
-            <TextField
-              name="startDate"
-              label="Date début Contrat"
-              type="date"
-              value={contractData.startDate}
-              onChange={handleChange}
-              fullWidth
-              InputLabelProps={{
-                shrink: true,
-              }}
-              color="success"
-              sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              name="endDate"
-              label="Date fin Contrat"
-              type="date"
-              value={contractData.endDate}
-              onChange={handleChange}
-              fullWidth
-              InputLabelProps={{
-                shrink: true,
-              }}
-              color="success"
-              sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
-            />
-          </Grid>
-        </Grid>
 
         <Grid container spacing={2} mb={4}>
           <Grid item xs={4}>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   CardContent,
@@ -12,7 +12,8 @@ import {
   ToggleButton,
 } from "@mui/material";
 
-const CompanyForm = ({ open, handleClose }) => {
+const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
+  const isEditMode = !!company;
   const [companyData, setCompanyData] = useState({
     name: "",
     address: "",
@@ -20,11 +21,29 @@ const CompanyForm = ({ open, handleClose }) => {
     email: "",
     siret: "",
     legalStatus: "",
-    phone: "",
     naf: "",
     tvaIntracom: "",
     tvaIntraSociete: "",
   });
+
+  useEffect(() => {
+    if (isEditMode && company) {
+      setCompanyData(company);
+    } else {
+      setCompanyData({
+        name: "",
+        address: "",
+        responsable: "",
+        email: "",
+        siret: "",
+        legalStatus: "",
+        naf: "",
+        tvaIntracom: "",
+        tvaIntraSociete: "",
+      });
+    }
+  }, [isEditMode, company]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,26 +53,6 @@ const CompanyForm = ({ open, handleClose }) => {
     }));
   };
 
-  const handleSubmit = async () => {
-    try {
-      const response = await fetch("http://localhost:8080/api/v1/addCompany", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(companyData),
-      });
-
-      if (response.ok) {
-        console.log("Company added successfully");
-        handleClose();
-      } else {
-        console.error("Failed to add company");
-      }
-    } catch (error) {
-      console.error("Error adding company:", error);
-    }
-  };
   const [formats, setFormats] = React.useState(() => []);
 
   const handleFormat = (event, newFormats) => {
@@ -74,9 +73,9 @@ const CompanyForm = ({ open, handleClose }) => {
         }
       }}>
 
-      <DialogTitle sx={{ backgroundColor: "#06668C", color: "#fff" }}>
+      <DialogTitle sx={{ backgroundColor: "#048B9A", color: "#fff" }}>
 
-        Nouvelle Compagnie
+      {isEditMode ? "Modifier l'entreprise" : "Nouvelle Compagnie"}
       </DialogTitle>
       <DialogContent>
         <CardContent>
@@ -116,7 +115,20 @@ const CompanyForm = ({ open, handleClose }) => {
               />
             </Grid>
             <Grid item xs={6}>
-              <TextField
+            <TextField
+
+              label="Responsable"
+              placeholder="Responsable"
+
+              fullWidth
+              name="responsable"
+              value={companyData.responsable}
+              onChange={handleChange}
+              />
+              
+            </Grid>
+            <Grid item xs={12}>
+            <TextField
                 label="Adresse"
                 placeholder="Adresse"
                 fullWidth
@@ -124,21 +136,10 @@ const CompanyForm = ({ open, handleClose }) => {
                 value={companyData.address}
                 onChange={handleChange}
               />
+              
             </Grid>
             <Grid item xs={6}>
-              <TextField
-
-                label="Responsable"
-                placeholder="Responsable"
-
-                fullWidth
-                name="responsable"
-                value={companyData.responsable}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
+            <TextField
                 label="Email"
                 placeholder="Email"
                 fullWidth
@@ -147,9 +148,12 @@ const CompanyForm = ({ open, handleClose }) => {
                 value={companyData.email}
                 onChange={handleChange}
               />
+
+
             </Grid>
-            <Grid item xs={4}>
-              <TextField
+            
+            <Grid item xs={6}>
+            <TextField
                 label="N° SIRET"
                 placeholder="Numero SIRET"
                 fullWidth
@@ -158,6 +162,19 @@ const CompanyForm = ({ open, handleClose }) => {
                 value={companyData.siret}
                 onChange={handleChange}
               />
+              
+            </Grid>
+            
+            <Grid item xs={4}>
+            <TextField
+                label="TVA"
+                placeholder="TVA Intra"
+                fullWidth
+                name="tvaIntracom"
+                value={companyData.tvaIntracom}
+                onChange={handleChange}
+              />
+  
             </Grid>
             <Grid item xs={4}>
               <TextField
@@ -179,26 +196,8 @@ const CompanyForm = ({ open, handleClose }) => {
                 onChange={handleChange}
               />
             </Grid>
-            <Grid item xs={6}>
-              <TextField
-                label="TVA"
-                placeholder="TVA Intra"
-                fullWidth
-                name="tvaIntracom"
-                value={companyData.tvaIntracom}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                label="TVA"
-                placeholder="TVA Intra"
-                fullWidth
-                name="tvaIntraSociete"
-                value={companyData.tvaIntraSociete}
-                onChange={handleChange}
-              />
-            </Grid>
+
+
           </Grid>
         </CardContent>
       </DialogContent>
@@ -206,8 +205,8 @@ const CompanyForm = ({ open, handleClose }) => {
         <Button onClick={handleClose} color="secondary">
           Annuler
         </Button>
-        <Button onClick={handleSubmit} color="primary">
-          Soumettre
+        <Button onClick={() => handleSubmit(companyData)} color="primary">
+          {isEditMode ? "Modifier" : "Ajouter"}
         </Button>
       </DialogActions>
     </Dialog>

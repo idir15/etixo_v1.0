@@ -68,9 +68,24 @@ const Contrat = () => {
     }
   };
 
-  const handleEdit = (id) => {
-    console.log("Modifier l'élément avec l'ID :", id);
+  const handleEdit = async (id) => {
+    try {
+      // Récupérer les informations du contrat par son ID
+      const response = await fetch(`http://localhost:8080/api/v1/getContractById/${id}`); 
+      if (response.ok) {
+        const contractData = await response.json();
+        // Pré-remplir le formulaire avec les données du contrat à modifier
+        setContractToEdit(contractData);
+        // Ouvrir le formulaire de modification
+        setOpen(true);
+      } else {
+        console.error('Erreur lors de la récupération des informations du contrat');
+      }
+    } catch (error) {
+      console.error('Erreur réseau', error);
+    }
   };
+  
 
 
   const getAllContracts = async () => {
@@ -99,7 +114,8 @@ const Contrat = () => {
  
 
   const columns = [
-    { field: "index", headerName: "N°", flex: 0.1, renderCell: (params) => params.api.getRowIndex(params.id) + 1},
+    { field: "id", headerName: "N°", flex: 0.1,},
+    // { field: "index", headerName: "N°", flex: 0.1, renderCell: (params) => params.api.getRowIndex(params.id) + 1},
     { field: "reference", headerName: "Référence", flex: 0.75 },
     { field: "collaborator", headerName: "Collaborateur", flex: 1 },
     { field: "contractType", headerName: "Type", flex: 0.75 },
@@ -134,8 +150,8 @@ const Contrat = () => {
           title="CONTRATS"
         />
  
- <div>
-          <ContratForm open={open} handleClose={handleClose} />
+        <div>
+        <ContratForm open={open} handleClose={handleClose} contractToEdit={contractToEdit} />
         </div>
 
         <Box
