@@ -41,17 +41,17 @@ const CollaboratorForm = ({ open, handleClose }) => {
       if (collaboratorData.name && collaboratorData.firstName && collaboratorData.address) {
         console.log("Données du collaborateur:", collaboratorData);
         handleClose();
-        // Passez les données du collaborateur au parent
-      sendDataToParent(collaboratorData);
+        // Appeler la fonction du parent pour envoyer les données du collaborateur
+        sendDataToParent(collaboratorData);
       } else {
         console.error("Veuillez remplir tous les champs obligatoires");
       }
-      
     } catch (error) {
       console.error("Erreur lors de l'ajout du collaborateur:", error);
     }
   };
-
+  
+  
   
 
   // Liste des nationalités
