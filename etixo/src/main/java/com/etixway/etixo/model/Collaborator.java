@@ -1,33 +1,54 @@
 package com.etixway.etixo.model;
-import jakarta.persistence.*;
 
+import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-
 public class Collaborator {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     private Long id;
-    @Column(name ="name")
+
+    @Column(name ="full_name")
     private String name;
-    @Column(name = "firstname")
+
+    @Column(name = "first_name")
     private String firstname;
-    @Column(name = "status")
-    private String status;
-    @Column(name ="startDateContract")
-    private LocalDate startDateContract;
-    @Column
-    private LocalDate endDateContract;
+
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "date_of_birth")
+    private LocalDate dateOfBirth;
+
+    @Column(name = "nationality")
+    private String nationality;
+
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "company_name")
+    private String companyName;
+
+    @Column(name = "social_security_number")
+    private String socialSecurityNumber;
 
     public Collaborator(){}
-    public Collaborator(Long id, String name, String firstname, String status, LocalDate startDateContract, LocalDate endDateContract) {
+
+    public Collaborator(Long id, String name, String firstname, String address, LocalDate dateOfBirth, String nationality, String phone, String email, String companyName, String socialSecurityNumber) {
         this.id = id;
         this.name = name;
         this.firstname = firstname;
-        this.status = status;
-        this.startDateContract = startDateContract;
-        this.endDateContract = endDateContract;
+        this.address = address;
+        this.dateOfBirth = dateOfBirth;
+        this.nationality = nationality;
+        this.phone = phone;
+        this.email = email;
+        this.companyName = companyName;
+        this.socialSecurityNumber = socialSecurityNumber;
     }
 
     public Long getId() {
@@ -54,28 +75,60 @@ public class Collaborator {
         this.firstname = firstname;
     }
 
-    public String getStatus() {
-        return status;
+    public String getAddress() {
+        return address;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public LocalDate getStartDateContract() {
-        return startDateContract;
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
     }
 
-    public void setStartDateContract(LocalDate startDateContract) {
-        this.startDateContract = startDateContract;
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 
-    public LocalDate getEndDateContract() {
-        return endDateContract;
+    public String getNationality() {
+        return nationality;
     }
 
-    public void setEndDateContract(LocalDate endDateContract) {
-        this.endDateContract = endDateContract;
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getSocialSecurityNumber() {
+        return socialSecurityNumber;
+    }
+
+    public void setSocialSecurityNumber(String socialSecurityNumber) {
+        this.socialSecurityNumber = socialSecurityNumber;
     }
 
     @Override
@@ -84,10 +137,13 @@ public class Collaborator {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", firstname='" + firstname + '\'' +
-                ", status='" + status + '\'' +
-                ", startDateContract=" + startDateContract +
-                ", endDateContract=" + endDateContract +
+                ", address='" + address + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", nationality='" + nationality + '\'' +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", companyName='" + companyName + '\'' +
+                ", socialSecurityNumber='" + socialSecurityNumber + '\'' +
                 '}';
     }
 }
-
