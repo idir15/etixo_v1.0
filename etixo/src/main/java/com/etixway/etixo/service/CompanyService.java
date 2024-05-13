@@ -53,7 +53,6 @@ public class CompanyService {
             existingCompany.setEmail(updatedCompany.getEmail());
             existingCompany.setSiret(updatedCompany.getSiret());
             existingCompany.setLegalStatus(updatedCompany.getLegalStatus());
-            existingCompany.setPhone(updatedCompany.getPhone());
             existingCompany.setNaf(updatedCompany.getNaf());
             existingCompany.setTva(updatedCompany.getTva());
 
