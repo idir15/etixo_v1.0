@@ -26,6 +26,12 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
     tvaIntraSociete: "",
   });
 
+  const [errors, setErrors] = useState({
+    email: "",
+    requiredFields: [],
+  });
+
+
   useEffect(() => {
     if (isEditMode && company) {
       setCompanyData(company);
@@ -52,6 +58,36 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
       [name]: value,
     }));
   };
+
+  const handleValidation = () => {
+    const newErrors = {
+      email: "",
+      requiredFields: [],
+    };
+
+    // Validate email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(companyData.email)) {
+      newErrors.email = "Adresse email invalide";
+    }
+    // Check required fields
+    const requiredFields = ["name", "address", "responsable", "email"];
+    requiredFields.forEach((field) => {
+      if (!companyData[field]) {
+        newErrors.requiredFields.push(field);
+      }
+    });
+
+    setErrors(newErrors);
+
+    return newErrors.email === "" && newErrors.requiredFields.length === 0;
+  };
+  const handleSubmitForm = () => {
+    if (handleValidation()) {
+      handleSubmit(companyData);
+    }
+  };
+
 
   const [formats, setFormats] = React.useState(() => []);
 
@@ -81,7 +117,7 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
         <CardContent>
                     <label>
           Type:
-          <ToggleButtonGroup
+      <ToggleButtonGroup
       value={formats}
       onChange={handleFormat}
       aria-label="text formatting"
@@ -106,47 +142,52 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
           <Grid container spacing={3}>
             <Grid item xs={6}>
               <TextField
-                label="Nom de l'entreprise"
+                label="Nom de l'entreprise *"
                 placeholder="Nom de l'entreprise"
                 fullWidth
                 name="name"
                 value={companyData.name}
                 onChange={handleChange}
+                error={errors.requiredFields.includes("name")}
               />
             </Grid>
             <Grid item xs={6}>
             <TextField
 
-              label="Responsable"
+              label="Responsable *"
               placeholder="Responsable"
 
               fullWidth
               name="responsable"
               value={companyData.responsable}
               onChange={handleChange}
+              error={errors.requiredFields.includes("responsable")}
               />
               
             </Grid>
             <Grid item xs={12}>
             <TextField
-                label="Adresse"
+                label="Adresse *"
                 placeholder="Adresse"
                 fullWidth
                 name="address"
                 value={companyData.address}
                 onChange={handleChange}
+                error={errors.requiredFields.includes("address")}
               />
               
             </Grid>
             <Grid item xs={6}>
             <TextField
-                label="Email"
+                label="Email *"
                 placeholder="Email"
                 fullWidth
                 type="email"
                 name="email"
                 value={companyData.email}
                 onChange={handleChange}
+                error={errors.requiredFields.includes("email") || !!errors.email}
+                helperText={errors.email}
               />
 
 
@@ -205,7 +246,7 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
         <Button onClick={handleClose} color="secondary">
           Annuler
         </Button>
-        <Button onClick={() => handleSubmit(companyData)} color="primary">
+        <Button onClick={() => handleSubmitForm(companyData)} color="primary">
           {isEditMode ? "Modifier" : "Ajouter"}
         </Button>
       </DialogActions>
