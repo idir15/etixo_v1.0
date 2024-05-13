@@ -26,7 +26,7 @@ public class Company {
 
     @Column(name ="legal_status")
     private String legalStatus;
-    
+
 
     @Column(name ="naf")
     private String naf;
