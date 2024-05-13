@@ -28,6 +28,7 @@ const Company = () => {
   const [companies, setCompanies] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [idToDelete, setIdToDelete] = useState(null);
+  const [editingCompany, setEditingCompany] = useState(null);
  
   const handleOpen = () => {
     setOpen(true);
@@ -70,6 +71,21 @@ const Company = () => {
     fetchData();
   }, []);
  
+  const handleEdit = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/v1/getCompany/${id}`);
+      if (response.ok) {
+        const data = await response.json();
+        setEditingCompany(data); // Met à jour l'état avec les informations de l'entreprise à modifier
+        setOpen(true); // Ouvre le formulaire de modification
+      } else {
+        console.error("Failed to fetch company for editing");
+      }
+    } catch (error) {
+      console.error("Error fetching company for editing:", error);
+    }
+  };
+
   const handleDelete = async () => {
     try {
       const response = await fetch(`http://localhost:8080/api/v1/deleteCompany/${idToDelete}`, {
@@ -89,19 +105,46 @@ const Company = () => {
     }
   };
  
-  const handleEdit = (id) => {
-    console.log("Modifier l'élément avec l'ID :", id);
+  const handleFormSubmit = async (companyData) => {
+    try {
+      let url = "http://localhost:8080/api/v1/addCompany"; // URL par défaut pour l'ajout d'une entreprise
+      let method = "POST"; // Méthode par défaut pour l'ajout
+  
+      if (companyData.id) {
+        // S'il y a un ID dans les données de l'entreprise, cela signifie que c'est une mise à jour
+        url = `http://localhost:8080/api/v1/updateCompany/${companyData.id}`; // Ajoutez l'ID à l'URL pour la mise à jour
+        method = "PUT"; // Utilisez la méthode PUT pour la mise à jour
+      }
+  
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(companyData),
+      });
+  
+      if (response.ok) {
+        console.log("Company added/updated successfully");
+        handleClose();
+      } else {
+        console.error("Failed to add/update company");
+      }
+    } catch (error) {
+      console.error("Error adding/updating company:", error);
+    }
   };
+  
+ 
  
   const columns = [
-    
+    { field: "id", headerName: "N°", flex: 0.1,},
     { field: "name", headerName: "Nom", flex: 1 },
     { field: "address", headerName: "Adresse", flex: 1,hide: true },
     { field: "responsable", headerName: "Responsable", flex: 1 },
     { field: "email", headerName: "Email", flex: 1 },
     { field: "siret", headerName: "N° SIRET", flex: 1 },
     { field: "legalStatus", headerName: "Forme juridique", flex: 1, hide: true },
-    { field: "phone", headerName: "Numero téléphone", flex: 1 },
     { field: "naf", headerName: "Code NAF", flex: 1, hide: true },
     { field: "tva", headerName: "TVA", flex: 1, hide: true },
     {
@@ -110,8 +153,8 @@ const Company = () => {
       flex: 0.55,
       renderCell: (params) => (
         <>
-          <Button onClick={() => handleEdit(params.row.id)} startIcon={<EditIcon />} />
-          <Button onClick={() => handleDialogOpen(params.row.id)} startIcon={<DeleteIcon />} />
+          <Button onClick={() => handleEdit(params.row.id)} startIcon={<EditIcon style={{ color: '#124660' }} />} />
+          <Button onClick={() => handleDialogOpen(params.row.id)} startIcon={<DeleteIcon style={{ color: '#D42633' }}/>} />
         </>
       ),
     },
@@ -124,8 +167,15 @@ const Company = () => {
           title="Companies"
         />
         <div>
-          <CompanyForm open={open} handleClose={handleClose} />
+          <CompanyForm
+            open={open}
+            handleClose={handleClose}
+            company={editingCompany} // Passe les informations de l'entreprise à modifier au formulaire
+            handleSubmit={handleFormSubmit} // Passe la fonction de soumission du formulaire
+          />
         </div>
+
+        
  
         <Box
           m="0"
@@ -164,7 +214,7 @@ const Company = () => {
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
             <Button
               variant="contained"
-              style={{ backgroundColor: '#06668C', color: '#FFFFFF' }}
+              style={{ backgroundColor: '#048B9A', color: '#FFFFFF' }}
               size="large"
               onClick={handleOpen}
               startIcon={<AddIcon />}

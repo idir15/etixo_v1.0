@@ -26,9 +26,7 @@ public class Company {
 
     @Column(name ="legal_status")
     private String legalStatus;
-
-    @Column(name ="phone")
-    private String phone;
+    
 
     @Column(name ="naf")
     private String naf;
@@ -101,13 +99,6 @@ public class Company {
         this.legalStatus = legalStatus;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
 
     public String getNaf() {
         return naf;
@@ -152,7 +143,6 @@ public class Company {
                 ", email='" + email + '\'' +
                 ", siret='" + siret + '\'' +
                 ", legal_status='" + legalStatus + '\'' +
-                ", phone='" + phone + '\'' +
                 ", naf='" + naf + '\'' +
                 ", tva='" + tva + '\'' +
                 ", isClient=" + isClient +
