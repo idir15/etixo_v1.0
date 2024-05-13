@@ -28,6 +28,12 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
   const [isClient, setIsClient] = useState(true);
   const [isEsn, setIsEsn] = useState(true);
 
+  const [errors, setErrors] = useState({
+    email: "",
+    requiredFields: [],
+  });
+
+
   useEffect(() => {
     if (isEditMode && company) {
       setCompanyData(company);
@@ -57,6 +63,40 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
       [name]: value,
     }));
   };
+
+
+  const handleValidation = () => {
+    const newErrors = {
+      email: "",
+      requiredFields: [],
+    };
+
+    // Validate email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(companyData.email)) {
+      newErrors.email = "Adresse email invalide";
+    }
+    // Check required fields
+    const requiredFields = ["name", "address", "responsable", "email"];
+    requiredFields.forEach((field) => {
+      if (!companyData[field]) {
+        newErrors.requiredFields.push(field);
+      }
+    });
+
+    setErrors(newErrors);
+
+    return newErrors.email === "" && newErrors.requiredFields.length === 0;
+  };
+  const handleSubmitForm = () => {
+    if (handleValidation()) {
+      handleSubmit(companyData);
+    }
+  };
+
+
+  const [formats, setFormats] = React.useState(() => []);
+
 
   const handleFormat = (event, newFormats) => {
     if (newFormats.includes("Client")) {
@@ -89,6 +129,7 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
       </DialogTitle>
       <DialogContent>
         <CardContent>
+
         <label>
             Type:
             <ToggleButtonGroup
@@ -97,6 +138,7 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
               sx={{ marginBottom: "18px", width: "100%" }}
             >
               <ToggleButton
+
                 sx={{
                   width: "10%",
                   fontSize: "18px",
@@ -119,47 +161,52 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
           <Grid container spacing={3}>
             <Grid item xs={6}>
               <TextField
-                label="Nom de l'entreprise"
+                label="Nom de l'entreprise *"
                 placeholder="Nom de l'entreprise"
                 fullWidth
                 name="name"
                 value={companyData.name}
                 onChange={handleChange}
+                error={errors.requiredFields.includes("name")}
               />
             </Grid>
             <Grid item xs={6}>
             <TextField
 
-              label="Responsable"
+              label="Responsable *"
               placeholder="Responsable"
 
               fullWidth
               name="responsable"
               value={companyData.responsable}
               onChange={handleChange}
+              error={errors.requiredFields.includes("responsable")}
               />
               
             </Grid>
             <Grid item xs={12}>
             <TextField
-                label="Adresse"
+                label="Adresse *"
                 placeholder="Adresse"
                 fullWidth
                 name="address"
                 value={companyData.address}
                 onChange={handleChange}
+                error={errors.requiredFields.includes("address")}
               />
               
             </Grid>
             <Grid item xs={6}>
             <TextField
-                label="Email"
+                label="Email *"
                 placeholder="Email"
                 fullWidth
                 type="email"
                 name="email"
                 value={companyData.email}
                 onChange={handleChange}
+                error={errors.requiredFields.includes("email") || !!errors.email}
+                helperText={errors.email}
               />
 
 
@@ -219,8 +266,11 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
           Annuler
         </Button>
 
+        <Button onClick={() => handleSubmitForm(companyData)} color="primary">
 
-        <Button onClick={() => handleSubmit({ ...companyData, isClient, isEsn })} color="primary">
+
+
+        
           {isEditMode ? "Modifier" : "Ajouter"}
         </Button>
       </DialogActions>
