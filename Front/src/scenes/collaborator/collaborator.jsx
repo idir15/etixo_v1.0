@@ -90,15 +90,19 @@ const Collaborator = () => {
   };
 
   const columns = [
-    { field: "firstname", headerName: "Nom", flex: 1 },
-    { field: "name", headerName: "Prénom", flex: 1 },
-    { field: "status", headerName: "Statut", flex: 1 },
-    { field: "startDateContract", headerName: "Date début contrat", flex: 1 }, 
-    { field: "endDateContract", headerName: "Date fin contrat", flex: 1 },
+    { field: "name", headerName: "Nom", flex: 1 },
+    { field: "firstname", headerName: "Prénom", flex: 1 },
+    { field: "dateOfBirth", headerName: "Date de Naissance", flex: 1 },
+    { field: "nationality", headerName: "Nationalité", flex: 1 }, 
+    { field: "phone", headerName: "Télephone", flex: 1 },
+    { field: "email", headerName: "Email", flex: 1 },
+    { field: "companyName", headerName: "Nom Compagnie", flex: 1 },
+    { field: "address", headerName: "Adresse Collaborateur", flex: 1 },
+    { field: "socialSecurityNumber", headerName: "Numéro Securité Sociale", flex: 1 },
     {
       field: "actions",
       headerName: "Actions",
-      flex: 0.3,
+      flex: 0.5,
       renderCell: (params) => (
         <>
           <Button onClick={() => handleEdit(params.row.id)} startIcon={<EditIcon />} />

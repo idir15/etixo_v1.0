@@ -26,7 +26,8 @@ const ContratForm = ({ open, handleClose }) => {
     annualGrossSalary: "",
     monthlyNetSalary: "",
     monthlyEmployerCharge: "",
-    collaborator: "",
+    collaborator: "", // Conservez l'ID du collaborateur ici
+    company: "", // Ajoutez un état pour le nom de la société
   });
 
   const [openCollaboratorForm, setOpenCollaboratorForm] = useState(false);
@@ -53,11 +54,27 @@ const ContratForm = ({ open, handleClose }) => {
     }
   };
 
+
+  const updateCollaboratorData = (data) => {
+    // Mettre à jour les données du collaborateur dans les données du contrat
+    setContractData((prevData) => ({
+      ...prevData,
+      collaborator: data.id, // Mettez à jour l'ID du collaborateur
+      company: data.companyName, // Mettez à jour le nom de la société
+    }));
+  };
+  
+
+
+
+
+
   useEffect(() => {
     if (collaboratorData) {
       submitCollaboratorToDatabase(collaboratorData);
     }
   }, [collaboratorData]);
+
 
   // Soumet les données du collaborateur à la base de données
   const submitCollaboratorToDatabase = async (collaboratorData) => {
@@ -96,11 +113,17 @@ const ContratForm = ({ open, handleClose }) => {
     setOpenCollaboratorForm(false);
   };
 
-  const handleSubmit = async (prevData) => {
+  const handleSubmit = async () => {
     try {
-
-      // Vérifier que les champs obligatoires sont remplis avant de soumettre les données
-      if (contractData.reference && contractData.contractType && contractData.startDate && contractData.endDate && contractData.collaborator) {
+      // Vérifier que les champs obligatoires sont remplis
+      if (
+        contractData.reference &&
+        contractData.contractType &&
+        contractData.startDate &&
+        contractData.endDate &&
+        contractData.collaborator
+      ) {
+        // Envoyer les données du contrat à l'API
         const response = await fetch("http://localhost:8080/api/v1/addContract", {
           method: "POST",
           headers: {
@@ -109,7 +132,7 @@ const ContratForm = ({ open, handleClose }) => {
           body: JSON.stringify(contractData),
         });
 
-
+        // Vérifier la réponse de l'API
         if (response.ok) {
           console.log("Contract added successfully");
           handleClose();
@@ -123,6 +146,7 @@ const ContratForm = ({ open, handleClose }) => {
       console.error("Error adding contract:", error);
     }
   };
+
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="lg" sx={{
@@ -250,7 +274,6 @@ const ContratForm = ({ open, handleClose }) => {
           </Grid>
 
 
-
         <Grid container spacing={2} mb={4}>
           <Grid item xs={4}>
             <TextField
@@ -300,13 +323,14 @@ const ContratForm = ({ open, handleClose }) => {
         <Button onClick={handleSubmit} color="primary">
           Soumettre
         </Button>
-        <Button onClick={handleCollaboratorFormOpen} color="primary">
-          Nouveau Collaborateur
-        </Button>
+        <Button onClick={() => setOpenCollaboratorForm(true)} color="primary">
+        Nouveau Collaborateur
+      </Button>
       </DialogActions>
       <CollaboratorForm
         open={openCollaboratorForm}
-        handleClose={handleCollaboratorFormClose}
+        handleClose={() => setOpenCollaboratorForm(false)}
+        updateCollaboratorData={updateCollaboratorData}
       />
     </Dialog>
   );
