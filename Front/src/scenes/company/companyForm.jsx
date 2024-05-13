@@ -10,6 +10,7 @@ import {
   DialogActions,
   ToggleButtonGroup,
   ToggleButton,
+  Typography
 } from "@mui/material";
 
 const CompanyForm = ({ open, handleClose }) => {
@@ -24,6 +25,8 @@ const CompanyForm = ({ open, handleClose }) => {
     naf: "",
     tvaIntracom: "",
     tvaIntraSociete: "",
+    isClient: false,
+    isEsn: false,
   });
 
   const handleChange = (e) => {
@@ -54,11 +57,24 @@ const CompanyForm = ({ open, handleClose }) => {
       console.error("Error adding company:", error);
     }
   };
-  const [formats, setFormats] = React.useState(() => []);
+ 
 
-  const handleFormat = (event, newFormats) => {
-    setFormats(newFormats);
+  const handleTypeSelection = (value) => {
+    if (value === 'client') {
+      setCompanyData((prevData) => ({
+        ...prevData,
+        isClient: true,
+        isEsn: false,
+      }));
+    } else if (value === 'esn') {
+      setCompanyData((prevData) => ({
+        ...prevData,
+        isClient: false,
+        isEsn: true,
+      }));
+    }
   };
+
   return (
     <Dialog
       open={open}
@@ -79,31 +95,53 @@ const CompanyForm = ({ open, handleClose }) => {
         Nouvelle Compagnie
       </DialogTitle>
       <DialogContent>
-        <CardContent>
-                    <label>
-          Type:
-          <ToggleButtonGroup
-      value={formats}
-      onChange={handleFormat}
-      aria-label="text formatting"
-      sx={{ marginBottom: '18px', width: '100%' }}
-    >
-      <ToggleButton value="true" aria-label="italic"
-                sx={{
-                    width: '10%',
-                    fontSize: '18px',
-                  }}>Client
-        
-      </ToggleButton>
-      <ToggleButton value="underlined" aria-label="underlined"
-                sx={{
-                    width: '10%',
-                    fontSize: '18px',
-                  }}>
-        ESN
-      </ToggleButton>
-    </ToggleButtonGroup>
-        </label>
+      <CardContent>
+          <Typography variant="subtitle1" gutterBottom>
+            Type sélectionné: {companyData.isClient ? "Client" : companyData.isEsn ? "ESN" : ""}
+          </Typography>
+          <label>
+            Type:
+            <ToggleButtonGroup
+  value={companyData.isClient ? 'client' : companyData.isEsn ? 'esn' : ''}
+  onChange={(event, value) => handleTypeSelection(value)}
+  aria-label="text formatting"
+  sx={{ marginBottom: '18px', width: '100%' }}
+>
+<ToggleButton
+  value="client"
+  sx={{
+    width: '10%',
+    fontSize: '18px',
+    backgroundColor: companyData.isClient ? '#FF0000' : '',
+    color: companyData.isClient ? '#fff' : '',
+    '&.Mui-selected': {
+      backgroundColor: '#FF0000',
+      color: '#fff',
+    },
+  }}
+>
+  Client
+</ToggleButton>
+<ToggleButton
+  value="esn"
+  sx={{
+    width: '10%',
+    fontSize: '18px',
+    backgroundColor: companyData.isEsn ? '#FF0000' : '',
+    color: companyData.isEsn ? '#fff' : '',
+    '&.Mui-selected': {
+      backgroundColor: '#FF0000',
+      color: '#fff',
+    },
+  }}
+>
+  ESN
+</ToggleButton>
+
+
+
+            </ToggleButtonGroup>
+          </label>
           <Grid container spacing={3}>
             <Grid item xs={6}>
               <TextField
