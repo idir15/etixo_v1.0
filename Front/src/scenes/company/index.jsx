@@ -153,8 +153,8 @@ const Company = () => {
       flex: 0.55,
       renderCell: (params) => (
         <>
-          <Button onClick={() => handleEdit(params.row.id)} startIcon={<EditIcon />} />
-          <Button onClick={() => handleDialogOpen(params.row.id)} startIcon={<DeleteIcon />} />
+          <Button onClick={() => handleEdit(params.row.id)} startIcon={<EditIcon style={{ color: '#124660' }} />} />
+          <Button onClick={() => handleDialogOpen(params.row.id)} startIcon={<DeleteIcon style={{ color: '#D42633' }}/>} />
         </>
       ),
     },
