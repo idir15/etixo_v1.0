@@ -25,10 +25,14 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
     tvaIntracom: "",
     tvaIntraSociete: "",
   });
+  const [isClient, setIsClient] = useState(true);
+  const [isEsn, setIsEsn] = useState(true);
 
   useEffect(() => {
     if (isEditMode && company) {
       setCompanyData(company);
+      setIsClient(company.isClient);
+      setIsEsn(company.isEsn);
     } else {
       setCompanyData({
         name: "",
@@ -41,9 +45,10 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
         tvaIntracom: "",
         tvaIntraSociete: "",
       });
+      setIsClient(true);
+      setIsEsn(true);
     }
   }, [isEditMode, company]);
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -53,11 +58,16 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
     }));
   };
 
-  const [formats, setFormats] = React.useState(() => []);
-
   const handleFormat = (event, newFormats) => {
-    setFormats(newFormats);
+    if (newFormats.includes("Client")) {
+      setIsClient(true);
+      setIsEsn(true);
+    } else if (newFormats.includes("ESN")) {
+      setIsClient(true);
+      setIsEsn(true);
+    }
   };
+
   return (
     <Dialog
       open={open}
@@ -79,30 +89,33 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
       </DialogTitle>
       <DialogContent>
         <CardContent>
-                    <label>
-          Type:
-          <ToggleButtonGroup
-      value={formats}
-      onChange={handleFormat}
-      aria-label="text formatting"
-      sx={{ marginBottom: '18px', width: '100%' }}
-    >
-      <ToggleButton value="true" aria-label="italic"
+        <label>
+            Type:
+            <ToggleButtonGroup
+              value={isClient ? ["Client"] : isEsn ? ["ESN"] : []}
+              onChange={handleFormat}
+              sx={{ marginBottom: "18px", width: "100%" }}
+            >
+              <ToggleButton
                 sx={{
-                    width: '10%',
-                    fontSize: '18px',
-                  }}>Client
-        
-      </ToggleButton>
-      <ToggleButton value="underlined" aria-label="underlined"
+                  width: "10%",
+                  fontSize: "18px",
+                }}
+                value="Client"
+              >
+                Client
+              </ToggleButton>
+              <ToggleButton
                 sx={{
-                    width: '10%',
-                    fontSize: '18px',
-                  }}>
-        ESN
-      </ToggleButton>
-    </ToggleButtonGroup>
-        </label>
+                  width: "10%",
+                  fontSize: "18px",
+                }}
+                value="ESN"
+              >
+                ESN
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </label>
           <Grid container spacing={3}>
             <Grid item xs={6}>
               <TextField
@@ -205,7 +218,9 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
         <Button onClick={handleClose} color="secondary">
           Annuler
         </Button>
-        <Button onClick={() => handleSubmit(companyData)} color="primary">
+
+
+        <Button onClick={() => handleSubmit({ ...companyData, isClient, isEsn })} color="primary">
           {isEditMode ? "Modifier" : "Ajouter"}
         </Button>
       </DialogActions>
