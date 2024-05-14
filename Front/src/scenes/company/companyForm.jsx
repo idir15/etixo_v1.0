@@ -10,7 +10,6 @@ import {
   DialogActions,
   ToggleButtonGroup,
   ToggleButton,
-  Typography
 } from "@mui/material";
 
 const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
@@ -25,23 +24,17 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
     naf: "",
     tvaIntracom: "",
     tvaIntraSociete: "",
-    isClient: false,
-    isEsn: false,
+    client: false,
+    esn: false,
   });
-  const [isClient, setIsClient] = useState(true);
-  const [isEsn, setIsEsn] = useState(true);
-
   const [errors, setErrors] = useState({
     email: "",
     requiredFields: [],
   });
 
-
   useEffect(() => {
     if (isEditMode && company) {
       setCompanyData(company);
-      setIsClient(company.isClient);
-      setIsEsn(company.isEsn);
     } else {
       setCompanyData({
         name: "",
@@ -53,9 +46,9 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
         naf: "",
         tvaIntracom: "",
         tvaIntraSociete: "",
+        client: false,
+        esn: false,
       });
-      setIsClient(true);
-      setIsEsn(true);
     }
   }, [isEditMode, company]);
 
@@ -66,7 +59,6 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
       [name]: value,
     }));
   };
-
 
   const handleValidation = () => {
     const newErrors = {
@@ -91,25 +83,21 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
 
     return newErrors.email === "" && newErrors.requiredFields.length === 0;
   };
+
   const handleSubmitForm = () => {
     if (handleValidation()) {
       handleSubmit(companyData);
     }
   };
 
-
-  const [formats, setFormats] = React.useState(() => []);
-
-
   const handleFormat = (event, newFormats) => {
-    if (newFormats.includes("Client")) {
-      setIsClient(true);
-      setIsEsn(true);
-    } else if (newFormats.includes("ESN")) {
-      setIsClient(true);
-      setIsEsn(true);
-
-    }
+    const clientSelected = newFormats.includes("Client");
+    const esnSelected = newFormats.includes("ESN");
+    setCompanyData((prevData) => ({
+      ...prevData,
+      client: clientSelected,
+      esn: esnSelected,
+    }));
   };
 
   return (
@@ -122,31 +110,28 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
         "& .MuiDialog-paper": {
           width: "70%",
           maxWidth: "none",
-
           maxHeight: "70vh"
         }
-      }}>
-
-      <DialogTitle sx={{ backgroundColor: "#048B9A", color: "#fff" }}>
-
-      {isEditMode ? "Modifier l'entreprise" : "Nouvelle Compagnie"}
+      }}
+    >
+      <DialogTitle sx={{ backgroundColor: "#82CFD8", color: "#82CFD8" }}>
+        {isEditMode ? "Modifier l'entreprise" : "Nouvelle Compagnie"}
       </DialogTitle>
       <DialogContent>
-
         <CardContent>
-
-        <label>
+          <label>
             Type:
             <ToggleButtonGroup
-              value={isClient ? ["Client"] : isEsn ? ["ESN"] : []}
+              value={companyData.client && companyData.esn ? ["Client", "ESN"] : companyData.client ? ["Client"] : companyData.esn ? ["ESN"] : []}
               onChange={handleFormat}
               sx={{ marginBottom: "18px", width: "100%" }}
             >
               <ToggleButton
-
                 sx={{
                   width: "10%",
                   fontSize: "18px",
+                  color: companyData.client ? "red" : undefined,
+                  backgroundColor: companyData.client ? "lightgray" : undefined,
                 }}
                 value="Client"
               >
@@ -156,12 +141,13 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
                 sx={{
                   width: "10%",
                   fontSize: "18px",
+                  color: companyData.esn ? "red" : undefined,
+                  backgroundColor: companyData.esn ? "lightgray" : undefined,
                 }}
                 value="ESN"
               >
                 ESN
               </ToggleButton>
-
             </ToggleButtonGroup>
           </label>
           <Grid container spacing={3}>
@@ -177,21 +163,18 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
               />
             </Grid>
             <Grid item xs={6}>
-            <TextField
-
-              label="Responsable *"
-              placeholder="Responsable"
-
-              fullWidth
-              name="responsable"
-              value={companyData.responsable}
-              onChange={handleChange}
-              error={errors.requiredFields.includes("responsable")}
+              <TextField
+                label="Responsable *"
+                placeholder="Responsable"
+                fullWidth
+                name="responsable"
+                value={companyData.responsable}
+                onChange={handleChange}
+                error={errors.requiredFields.includes("responsable")}
               />
-              
             </Grid>
             <Grid item xs={12}>
-            <TextField
+              <TextField
                 label="Adresse *"
                 placeholder="Adresse"
                 fullWidth
@@ -200,10 +183,9 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
                 onChange={handleChange}
                 error={errors.requiredFields.includes("address")}
               />
-              
             </Grid>
             <Grid item xs={6}>
-            <TextField
+              <TextField
                 label="Email *"
                 placeholder="Email"
                 fullWidth
@@ -214,12 +196,9 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
                 error={errors.requiredFields.includes("email") || !!errors.email}
                 helperText={errors.email}
               />
-
-
             </Grid>
-            
             <Grid item xs={6}>
-            <TextField
+              <TextField
                 label="N° SIRET"
                 placeholder="Numero SIRET"
                 fullWidth
@@ -228,11 +207,9 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
                 value={companyData.siret}
                 onChange={handleChange}
               />
-              
             </Grid>
-            
             <Grid item xs={4}>
-            <TextField
+              <TextField
                 label="TVA"
                 placeholder="TVA Intra"
                 fullWidth
@@ -240,7 +217,6 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
                 value={companyData.tvaIntracom}
                 onChange={handleChange}
               />
-  
             </Grid>
             <Grid item xs={4}>
               <TextField
@@ -262,8 +238,6 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
                 onChange={handleChange}
               />
             </Grid>
-
-
           </Grid>
         </CardContent>
       </DialogContent>
@@ -271,12 +245,7 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
         <Button onClick={handleClose} color="secondary">
           Annuler
         </Button>
-
-        <Button onClick={() => handleSubmitForm(companyData)} color="primary">
-
-
-
-        
+        <Button onClick={handleSubmitForm} color="primary">
           {isEditMode ? "Modifier" : "Ajouter"}
         </Button>
       </DialogActions>
