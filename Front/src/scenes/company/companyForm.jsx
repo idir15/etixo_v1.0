@@ -119,7 +119,7 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
       newErrors.email = "Adresse email invalide";
     }
     // Vérifier les champs obligatoires
-    const requiredFields = ["name", "address", "responsable", "email"];
+    const requiredFields = ["name", "address", "responsable", "email", "siret"];
     requiredFields.forEach((field) => {
       if (!companyData[field]) {
         newErrors.requiredFields.push(field);
@@ -244,14 +244,13 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
             </Grid>
             <Grid item xs={6}>
               <TextField
-                label="N° SIRET"
+                label="N° SIRET *"
                 placeholder="Numero SIRET"
                 fullWidth
-                type="number"
                 name="siret"
                 value={companyData.siret}
                 onChange={handleChange}
-                error={!!errors.siret}
+                error={errors.requiredFields.includes("siret") || !!errors.siret}
                 helperText={errors.siret}
               />
             </Grid>
@@ -263,7 +262,7 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
                 name="tvaIntracom"
                 value={companyData.tvaIntracom}
                 onChange={handleChange}
-                error={!!errors.tvaIntracom}
+                error={errors.requiredFields.includes("tvaIntracom") || !!errors.tvaIntracom}
                 helperText={errors.tvaIntracom}
               />
             </Grid>
@@ -275,7 +274,7 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
                 name="legalStatus"
                 value={companyData.legalStatus}
                 onChange={handleChange}
-                error={!!errors.legalStatus}
+                error={errors.requiredFields.includes("legalStatus") || !!errors.legalStatus}
                 helperText={errors.legalStatus}
               />
             </Grid>
@@ -287,7 +286,7 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
                 name="naf"
                 value={companyData.naf}
                 onChange={handleChange}
-                error={!!errors.naf}
+                error={errors.requiredFields.includes("naf") || !!errors.naf}
                 helperText={errors.naf}
               />
             </Grid>
