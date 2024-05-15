@@ -1,6 +1,10 @@
 package com.etixway.etixo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+
 
 @Entity
 public class Company {
@@ -9,18 +13,27 @@ public class Company {
     @Id
     private Long id;
 
+    @NotBlank(message = "Le nom de l'entreprise ne peut pas être vide")
     @Column(name ="name")
     private String name;
 
+    @NotBlank(message = "L'adresse ne peut pas être vide")
+    @Pattern(regexp = "[\\w\\s',]+", message = "L'adresse ne doit contenir que des lettres, des chiffres, des virgules et des apostrophes")
     @Column(name ="address")
     private String address;
 
+    @NotBlank(message = "Le nom du responsable ne peut pas être vide")
+    @Pattern(regexp = "[a-zA-Z\s]+", message = "Le nom du responsable ne doit contenir que des lettres")
     @Column(name ="responsable")
     private String responsable;
 
+    @NotBlank(message = "L'email ne peut pas être vide")
+    @Email(message = "L'email doit être valide")
     @Column(name ="email")
     private String email;
 
+    @NotBlank(message = "Le numéro SIRET ne peut pas être vide")
+    @Pattern(regexp = "\\d+", message = "Le numéro SIRET ne doit contenir que des chiffres")
     @Column(name ="siret")
     private String siret;
 
@@ -28,6 +41,8 @@ public class Company {
     private String legalStatus;
 
 
+    @NotBlank(message = "Le code NAF ne peut pas être vide")
+    @Pattern(regexp = "[a-zA-Z0-9]+", message = "Le code NAF ne doit contenir que des lettres et des chiffres")
     @Column(name ="naf")
     private String naf;
 
@@ -39,6 +54,7 @@ public class Company {
 
     @Column(name ="is_esn")
     private boolean isEsn;
+
 
     public Company() {
     }

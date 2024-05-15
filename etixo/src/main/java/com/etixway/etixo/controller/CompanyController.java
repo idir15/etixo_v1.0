@@ -2,6 +2,7 @@ package com.etixway.etixo.controller;
 
 import com.etixway.etixo.model.Company;
 import com.etixway.etixo.service.CompanyService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class CompanyController {
     }
 
     @PostMapping("/addCompany")
-    public Company addCompany(@RequestBody Company company) {
+    public Company addCompany(@Valid @RequestBody Company company) {
         return companyService.addCompany(company);
     }
 
