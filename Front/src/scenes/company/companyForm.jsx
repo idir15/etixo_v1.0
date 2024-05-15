@@ -8,8 +8,11 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  ToggleButtonGroup,
-  ToggleButton,
+  FormControlLabel,
+  Checkbox,
+  FormLabel,
+  FormGroup,
+  FormControl,
 } from "@mui/material";
 
 const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
@@ -90,66 +93,80 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
     }
   };
 
-  const handleFormat = (event, newFormats) => {
-    const clientSelected = newFormats.includes("Client");
-    const esnSelected = newFormats.includes("ESN");
-    setCompanyData((prevData) => ({
-      ...prevData,
-      client: clientSelected,
-      esn: esnSelected,
-    }));
+  const handleCheckboxChange = (e) => {
+    const { name, checked } = e.target;
+    setCompanyData((prevData) => {
+      const newState = { ...prevData, [name]: checked };
+
+      if (checked) {
+        // When a checkbox is checked, the other is also set to true
+        if (name === "esn") newState.client = true;
+        if (name === "client") newState.esn = true;
+      } else {
+        // When a checkbox is unchecked, the other remains true if it's already checked
+        if (name === "esn" && !prevData.client) newState.client = false;
+        if (name === "client" && !prevData.esn) newState.esn = false;
+      }
+
+      return newState;
+    });
+  };
+
+
+  const handleDialogClose = (event, reason) => {
+    if (reason === "backdropClick") {
+      // Prevent closing when clicking outside
+      return;
+    }
+    handleClose();
   };
 
   return (
     <Dialog
       open={open}
-      onClose={handleClose}
+      onClose={handleDialogClose}
       fullWidth
       maxWidth="lg"
       sx={{
         "& .MuiDialog-paper": {
           width: "70%",
           maxWidth: "none",
-          maxHeight: "70vh"
-        }
+          maxHeight: "70vh",
+        },
       }}
     >
-      <DialogTitle sx={{ backgroundColor: "#82CFD8", color: "#82CFD8" }}>
+      <DialogTitle sx={{ backgroundColor: "#048B9A"}}>
         {isEditMode ? "Modifier l'entreprise" : "Nouvelle Compagnie"}
       </DialogTitle>
       <DialogContent>
         <CardContent>
-          <label>
-            Type:
-            <ToggleButtonGroup
-              value={companyData.client && companyData.esn ? ["Client", "ESN"] : companyData.client ? ["Client"] : companyData.esn ? ["ESN"] : []}
-              onChange={handleFormat}
-              sx={{ marginBottom: "18px", width: "100%" }}
-            >
-              <ToggleButton
-                sx={{
-                  width: "10%",
-                  fontSize: "18px",
-                  color: companyData.client ? "red" : undefined,
-                  backgroundColor: companyData.client ? "lightgray" : undefined,
-                }}
-                value="Client"
-              >
-                Client
-              </ToggleButton>
-              <ToggleButton
-                sx={{
-                  width: "10%",
-                  fontSize: "18px",
-                  color: companyData.esn ? "red" : undefined,
-                  backgroundColor: companyData.esn ? "lightgray" : undefined,
-                }}
-                value="ESN"
-              >
-                ESN
-              </ToggleButton>
-            </ToggleButtonGroup>
-          </label>
+        <FormControl component="fieldset">
+            <FormLabel component="legend">Type</FormLabel>
+            <FormGroup aria-label="position" row>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={companyData.esn}
+                    onChange={handleCheckboxChange}
+                    name="esn"
+                  />
+                }
+                label="ESN"
+                sx={{ '& .MuiSvgIcon-root': { fontSize: 28 } }}
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={companyData.client}
+                    onChange={handleCheckboxChange}
+                    name="client"
+                  />
+                }
+                label="Client"
+                sx={{ '& .MuiSvgIcon-root': { fontSize: 28 } }}
+              />
+            </FormGroup>
+          </FormControl>
           <Grid container spacing={3}>
             <Grid item xs={6}>
               <TextField
@@ -254,3 +271,7 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
 };
 
 export default CompanyForm;
+
+
+
+

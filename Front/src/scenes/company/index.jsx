@@ -78,12 +78,14 @@ const Company = () => {
         const data = await response.json();
         setEditingCompany(data); // Met à jour l'état avec les informations de l'entreprise à modifier
         setOpen(true); // Ouvre le formulaire de modification
+        
       } else {
         console.error("Failed to fetch company for editing");
       }
     } catch (error) {
       console.error("Error fetching company for editing:", error);
     }
+  
   };
 
   const handleDelete = async () => {
@@ -127,6 +129,7 @@ const Company = () => {
       if (response.ok) {
         console.log("Company added/updated successfully");
         handleClose();
+        window.location.reload();
       } else {
         console.error("Failed to add/update company");
       }
