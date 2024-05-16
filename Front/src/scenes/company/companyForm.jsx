@@ -26,7 +26,6 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
     legalStatus: "",
     naf: "",
     tvaIntracom: "",
-    tvaIntraSociete: "",
     client: false,
     esn: false,
   });
@@ -48,7 +47,6 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
         legalStatus: "",
         naf: "",
         tvaIntracom: "",
-        tvaIntraSociete: "",
         client: false,
         esn: false,
       });

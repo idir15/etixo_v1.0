@@ -110,7 +110,7 @@ const Company = () => {
   const handleFormSubmit = async (companyData) => {
     try {
       let url = "http://localhost:8080/api/v1/addCompany"; // URL par défaut pour l'ajout d'une entreprise
-      let method = "POST"; // Méthode par défaut pour l'ajout
+      let method = "POST"; 
   
       if (companyData.id) {
         // S'il y a un ID dans les données de l'entreprise, cela signifie que c'est une mise à jour
