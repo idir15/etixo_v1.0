@@ -57,9 +57,56 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    // Validation selon le champ
+    let errorMessage = "";
+    switch (name) {
+      case "email":
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) {
+          errorMessage = "Adresse email invalide";
+        }
+        break;
+      case "responsable":
+        if (!/^[a-zA-Z\s]+$/.test(value)) {
+          errorMessage = "Le nom du responsable ne doit contenir que des lettres.";
+        }
+        break;
+      case "address":
+        if (!/^[\w\s',]+$/.test(value)) {
+          errorMessage = "L'adresse ne doit contenir que des lettres, des chiffres, des virgules et des apostrophes.";
+        }
+        break;
+      case "siret":
+      case "tvaIntracom":
+        if (!/^\d+$/.test(value)) {
+          errorMessage = "Ce champ doit contenir uniquement des chiffres.";
+        }
+        break;
+      case "legalStatus":
+        if (!/^[a-zA-Z\s]+$/.test(value)) {
+          errorMessage = "La forme juridique ne doit contenir que des lettres.";
+        }
+        break;
+      case "naf":
+        if (!/^[a-zA-Z0-9]+$/.test(value)) {
+          errorMessage = "Le code NAF ne doit contenir que des lettres et des chiffres.";
+        }
+        break;
+      default:
+        break;
+    }
+
+    // Mettre à jour les données de la société
     setCompanyData((prevData) => ({
       ...prevData,
       [name]: value,
+    }));
+
+    // Mettre à jour les erreurs
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: errorMessage,
     }));
   };
 
@@ -69,13 +116,13 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
       requiredFields: [],
     };
 
-    // Validate email
+    // Valider l'email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(companyData.email)) {
       newErrors.email = "Adresse email invalide";
     }
-    // Check required fields
-    const requiredFields = ["name", "address", "responsable", "email"];
+    // Vérifier les champs obligatoires
+    const requiredFields = ["name", "address", "responsable", "email", "siret"];
     requiredFields.forEach((field) => {
       if (!companyData[field]) {
         newErrors.requiredFields.push(field);
@@ -119,6 +166,7 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
       return;
     }
     handleClose();
+
   };
 
   return (
@@ -136,6 +184,7 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
       }}
     >
       <DialogTitle sx={{ backgroundColor: "#048B9A"}}>
+
         {isEditMode ? "Modifier l'entreprise" : "Nouvelle Compagnie"}
       </DialogTitle>
       <DialogContent>
@@ -167,6 +216,7 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
               />
             </FormGroup>
           </FormControl>
+
           <Grid container spacing={3}>
             <Grid item xs={6}>
               <TextField
@@ -187,7 +237,9 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
                 name="responsable"
                 value={companyData.responsable}
                 onChange={handleChange}
-                error={errors.requiredFields.includes("responsable")}
+                error={errors.requiredFields.includes("responsable") || !!errors.responsable}
+                helperText={errors.responsable}
+
               />
             </Grid>
             <Grid item xs={12}>
@@ -198,7 +250,8 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
                 name="address"
                 value={companyData.address}
                 onChange={handleChange}
-                error={errors.requiredFields.includes("address")}
+                error={errors.requiredFields.includes("address") || !!errors.address}
+                helperText={errors.address}
               />
             </Grid>
             <Grid item xs={6}>
@@ -216,13 +269,15 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
             </Grid>
             <Grid item xs={6}>
               <TextField
-                label="N° SIRET"
+
+                label="N° SIRET *"
                 placeholder="Numero SIRET"
                 fullWidth
-                type="number"
                 name="siret"
                 value={companyData.siret}
                 onChange={handleChange}
+                error={errors.requiredFields.includes("siret") || !!errors.siret}
+                helperText={errors.siret}
               />
             </Grid>
             <Grid item xs={4}>
@@ -233,6 +288,8 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
                 name="tvaIntracom"
                 value={companyData.tvaIntracom}
                 onChange={handleChange}
+                error={errors.requiredFields.includes("tvaIntracom") || !!errors.tvaIntracom}
+                helperText={errors.tvaIntracom}
               />
             </Grid>
             <Grid item xs={4}>
@@ -243,6 +300,8 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
                 name="legalStatus"
                 value={companyData.legalStatus}
                 onChange={handleChange}
+                error={errors.requiredFields.includes("legalStatus") || !!errors.legalStatus}
+                helperText={errors.legalStatus}
               />
             </Grid>
             <Grid item xs={4}>
@@ -253,6 +312,8 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
                 name="naf"
                 value={companyData.naf}
                 onChange={handleChange}
+                error={errors.requiredFields.includes("naf") || !!errors.naf}
+                helperText={errors.naf}
               />
             </Grid>
           </Grid>
@@ -271,7 +332,3 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
 };
 
 export default CompanyForm;
-
-
-
-
