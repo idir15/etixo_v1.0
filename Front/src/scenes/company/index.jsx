@@ -78,12 +78,14 @@ const Company = () => {
         const data = await response.json();
         setEditingCompany(data); // Met à jour l'état avec les informations de l'entreprise à modifier
         setOpen(true); // Ouvre le formulaire de modification
+        
       } else {
         console.error("Failed to fetch company for editing");
       }
     } catch (error) {
       console.error("Error fetching company for editing:", error);
     }
+  
   };
 
   const handleDelete = async () => {
@@ -108,7 +110,7 @@ const Company = () => {
   const handleFormSubmit = async (companyData) => {
     try {
       let url = "http://localhost:8080/api/v1/addCompany"; // URL par défaut pour l'ajout d'une entreprise
-      let method = "POST"; // Méthode par défaut pour l'ajout
+      let method = "POST"; 
   
       if (companyData.id) {
         // S'il y a un ID dans les données de l'entreprise, cela signifie que c'est une mise à jour
@@ -127,6 +129,7 @@ const Company = () => {
       if (response.ok) {
         console.log("Company added/updated successfully");
         handleClose();
+        window.location.reload();
       } else {
         console.error("Failed to add/update company");
       }
@@ -136,10 +139,29 @@ const Company = () => {
   };
   
  
- 
+  const getType = (client, esn) => {
+ if (client && esn) {
+return "Client & ESN";
+ } else if (client) {
+      return "Client";
+    } else if (esn) {
+      return "ESN";
+    } else{
+      return "Erreur";
+    }
+  };
   const columns = [
-    { field: "id", headerName: "N°", flex: 0.1,},
+    { field: "id", headerName: "N°", flex: 0.2,},
     { field: "name", headerName: "Nom", flex: 1 },
+    { 
+      field: "type", 
+      headerName: "Type", 
+      flex: 0.8,
+      valueGetter: (params) => {
+        const { client, esn} = params.row;
+        return getType(client, esn);
+      }
+    },
     { field: "address", headerName: "Adresse", flex: 1,hide: true },
     { field: "responsable", headerName: "Responsable", flex: 1 },
     { field: "email", headerName: "Email", flex: 1 },
