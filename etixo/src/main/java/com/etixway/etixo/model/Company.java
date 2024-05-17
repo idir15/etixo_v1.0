@@ -40,8 +40,6 @@ public class Company {
     @Column(name ="legal_status")
     private String legalStatus;
 
-    @NotBlank(message = "Le code NAF ne peut pas être vide")
-    @Pattern(regexp = "[a-zA-Z0-9]+", message = "Le code NAF ne doit contenir que des lettres et des chiffres")
     @Column(name ="naf")
     private String naf;
 

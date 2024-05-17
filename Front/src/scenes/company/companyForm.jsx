@@ -12,6 +12,7 @@ import {
   Checkbox,
   FormLabel,
   FormGroup,
+  FormHelperText,
   FormControl,
 } from "@mui/material";
 
@@ -32,6 +33,7 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
   const [errors, setErrors] = useState({
     email: "",
     requiredFields: [],
+    type: "",
   });
 
   useEffect(() => {
@@ -112,6 +114,7 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
     const newErrors = {
       email: "",
       requiredFields: [],
+      type: "",
     };
 
     // Valider l'email
@@ -127,9 +130,18 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
       }
     });
 
+    // Vérifier si au moins un type est sélectionné
+    if (!companyData.client && !companyData.esn) {
+      newErrors.type = "Veuillez sélectionner au moins un type";
+    }
+
     setErrors(newErrors);
 
-    return newErrors.email === "" && newErrors.requiredFields.length === 0;
+    return (
+      newErrors.email === "" &&
+      newErrors.requiredFields.length === 0 &&
+      newErrors.type === ""
+    );
   };
 
   const handleSubmitForm = () => {
@@ -140,23 +152,11 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
 
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
-    setCompanyData((prevData) => {
-      const newState = { ...prevData, [name]: checked };
-
-      if (checked) {
-        // When a checkbox is checked, the other is also set to true
-        if (name === "esn") newState.client = true;
-        if (name === "client") newState.esn = true;
-      } else {
-        // When a checkbox is unchecked, the other remains true if it's already checked
-        if (name === "esn" && !prevData.client) newState.client = false;
-        if (name === "client" && !prevData.esn) newState.esn = false;
-      }
-
-      return newState;
-    });
+    setCompanyData((prevData) => ({
+      ...prevData,
+      [name]: checked,
+    }));
   };
-
 
   const handleDialogClose = (event, reason) => {
     if (reason === "backdropClick") {
@@ -164,7 +164,6 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
       return;
     }
     handleClose();
-
   };
 
   return (
@@ -181,14 +180,13 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
         },
       }}
     >
-      <DialogTitle sx={{ backgroundColor: "#048B9A"}}>
-
+      <DialogTitle sx={{ backgroundColor: "#048B9A" }}>
         {isEditMode ? "Modifier l'entreprise" : "Nouvelle Compagnie"}
       </DialogTitle>
       <DialogContent>
         <CardContent>
-        <FormControl component="fieldset">
-            <FormLabel component="legend">Type</FormLabel>
+          <FormControl component="fieldset" sx={{ mb: 1.6 }} error={Boolean(errors.type)}>
+            <FormLabel component="legend">Type de Compagnie *</FormLabel>
             <FormGroup aria-label="position" row>
               <FormControlLabel
                 control={
@@ -199,7 +197,7 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
                   />
                 }
                 label="ESN"
-                sx={{ '& .MuiSvgIcon-root': { fontSize: 28 } }}
+                sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
               />
               <FormControlLabel
                 control={
@@ -210,9 +208,12 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
                   />
                 }
                 label="Client"
-                sx={{ '& .MuiSvgIcon-root': { fontSize: 28 } }}
+                sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
               />
             </FormGroup>
+            {errors.type && (
+              <FormHelperText>{errors.type}</FormHelperText>
+            )}
           </FormControl>
 
           <Grid container spacing={3}>
@@ -225,6 +226,8 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
                 value={companyData.name}
                 onChange={handleChange}
                 error={errors.requiredFields.includes("name")}
+                color="success"
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
               />
             </Grid>
             <Grid item xs={6}>
@@ -237,6 +240,8 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
                 onChange={handleChange}
                 error={errors.requiredFields.includes("responsable") || !!errors.responsable}
                 helperText={errors.responsable}
+                color="success"
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
 
               />
             </Grid>
@@ -250,6 +255,8 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
                 onChange={handleChange}
                 error={errors.requiredFields.includes("address") || !!errors.address}
                 helperText={errors.address}
+                color="success"
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
               />
             </Grid>
             <Grid item xs={6}>
@@ -263,6 +270,8 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
                 onChange={handleChange}
                 error={errors.requiredFields.includes("email") || !!errors.email}
                 helperText={errors.email}
+                color="success"
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
               />
             </Grid>
             <Grid item xs={6}>
@@ -276,6 +285,8 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
                 onChange={handleChange}
                 error={errors.requiredFields.includes("siret") || !!errors.siret}
                 helperText={errors.siret}
+                color="success"
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
               />
             </Grid>
             <Grid item xs={4}>
@@ -288,6 +299,8 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
                 onChange={handleChange}
                 error={errors.requiredFields.includes("tvaIntracom") || !!errors.tvaIntracom}
                 helperText={errors.tvaIntracom}
+                color="success"
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
               />
             </Grid>
             <Grid item xs={4}>
@@ -300,6 +313,8 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
                 onChange={handleChange}
                 error={errors.requiredFields.includes("legalStatus") || !!errors.legalStatus}
                 helperText={errors.legalStatus}
+                color="success"
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
               />
             </Grid>
             <Grid item xs={4}>
@@ -312,6 +327,8 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
                 onChange={handleChange}
                 error={errors.requiredFields.includes("naf") || !!errors.naf}
                 helperText={errors.naf}
+                color="success"
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
               />
             </Grid>
           </Grid>
