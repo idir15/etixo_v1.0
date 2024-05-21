@@ -102,7 +102,7 @@ const Collaborator = () => {
     {
       field: "actions",
       headerName: "Actions",
-      flex: 0.5,
+      flex: 1,
       renderCell: (params) => (
         <>
           <Button onClick={() => handleEdit(params.row.id)} startIcon={<EditIcon />} />
