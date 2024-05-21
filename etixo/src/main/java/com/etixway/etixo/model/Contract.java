@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import java.sql.Date; // Importer java.sql.Date
 import java.text.SimpleDateFormat;
 
+import static jakarta.persistence.CascadeType.MERGE;
+import static jakarta.persistence.CascadeType.PERSIST;
+
 @Entity
 public class Contract {
 
@@ -28,6 +31,10 @@ public class Contract {
 
     @Column(name = "monthly_net_salary")
     private double monthlyNetSalary;
+
+    @ManyToOne(cascade = {PERSIST})
+    @JoinColumn(name = "id_collaborator")
+    private Collaborator collaborator;
 
     public Contract() {
     }
@@ -91,6 +98,14 @@ public class Contract {
         this.monthlyNetSalary = monthlyNetSalary;
     }
 
+    public Collaborator getCollaborator() {
+        return collaborator;
+    }
+
+    public void setCollaborator(Collaborator collaborator) {
+        this.collaborator = collaborator;
+    }
+
     // Méthode pour formater la date
     public String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
@@ -107,6 +122,7 @@ public class Contract {
                 ", endDate=" + formatDate(endDate) +
                 ", annualGrossSalary=" + annualGrossSalary +
                 ", monthlyNetSalary=" + monthlyNetSalary +
+                ", collaborator=" + collaborator +
                 '}';
     }
 }

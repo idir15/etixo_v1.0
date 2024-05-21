@@ -8,12 +8,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  ToggleButtonGroup,
-  ToggleButton,
-  Select,
-  MenuItem,
-  InputLabel, 
   Autocomplete,
+  Typography,
 } from "@mui/material";
 import CollaboratorForm from "../collaborator/collaboratorForm";
 
@@ -31,9 +27,6 @@ const ContratForm = ({ open, handleClose }) => {
   });
 
   const [openCollaboratorForm, setOpenCollaboratorForm] = useState(false);
-
-  const [collaboratorData, setCollaboratorData] = useState(null);
-
   const [collaborators, setCollaborators] = useState([]); // Liste des collaborateurs
 
   useEffect(() => {
@@ -54,7 +47,6 @@ const ContratForm = ({ open, handleClose }) => {
     }
   };
 
-
   const updateCollaboratorData = (data) => {
     // Mettre à jour les données du collaborateur dans les données du contrat
     setContractData((prevData) => ({
@@ -63,39 +55,20 @@ const ContratForm = ({ open, handleClose }) => {
       company: data.companyName, // Mettez à jour le nom de la société
     }));
   };
-  
-
-
-
-
 
   useEffect(() => {
-    if (collaboratorData) {
-      submitCollaboratorToDatabase(collaboratorData);
-    }
-  }, [collaboratorData]);
-
-
-  // Soumet les données du collaborateur à la base de données
-  const submitCollaboratorToDatabase = async (collaboratorData) => {
-    try {
-      const response = await fetch("http://localhost:8080/api/v1/addcollaborator", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(collaboratorData),
-      });
-
-      if (response.ok) {
-        console.log("Collaborator added successfully");
-      } else {
-        console.error("Failed to add collaborator");
+    if (contractData.collaborator) {
+      const selectedCollaborator = collaborators.find(
+        (collab) => collab.id === contractData.collaborator
+      );
+      if (selectedCollaborator) {
+        setContractData((prevData) => ({
+          ...prevData,
+          company: selectedCollaborator.companyName,
+        }));
       }
-    } catch (error) {
-      console.error("Error adding collaborator:", error);
     }
-  };
+  }, [contractData.collaborator, collaborators]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -105,12 +78,14 @@ const ContratForm = ({ open, handleClose }) => {
     }));
   };
 
-  const handleCollaboratorFormOpen = () => {
-    setOpenCollaboratorForm(true);
-  };
-
-  const handleCollaboratorFormClose = () => {
-    setOpenCollaboratorForm(false);
+  const handleCollaboratorSelect = (event, value) => {
+    if (value) {
+      setContractData((prevData) => ({
+        ...prevData,
+        collaborator: value.id,
+        company: value.companyName,
+      }));
+    }
   };
 
   const handleSubmit = async () => {
@@ -147,7 +122,6 @@ const ContratForm = ({ open, handleClose }) => {
     }
   };
 
-
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="lg" sx={{
       "& .MuiDialog-paper": {
@@ -160,50 +134,42 @@ const ContratForm = ({ open, handleClose }) => {
         Nouveau Contrat
       </DialogTitle>
       <DialogContent>
-      <CardContent >
-
-
-
-
-<br />
-<Grid container spacing={3} mb={4}>
-
-  <Grid item xs={6}>
-    <TextField
-      id="outlined-multiline-flexible"
-      placeholder="Référence du Contrat"
-      name="reference"
-      label="Référence du Contrat"
-      value={contractData.reference}
-      onChange={handleChange}
-      fullWidth
-      color="success"
-      sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
-    />
-  </Grid>
-  <Grid item xs={6}>
-        <Autocomplete
-          freeSolo
-          options={collaborators}
-          getOptionLabel={(option) => `${option.name} ${option.firstname}`} 
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Collaborateur"
-              placeholder="Collaborateur"
-              fullWidth
-              name="collaborator"
-              value={collaboratorData}
-              onChange={handleChange}
-              sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
-            />
-          )}
-        />
-      </Grid>
-</Grid>
+        <CardContent>
+          <Grid container spacing={3} mb={4}>
+            <Grid item xs={6}>
+              <TextField
+                id="outlined-multiline-flexible"
+                placeholder="Référence du Contrat"
+                name="reference"
+                label="Référence du Contrat"
+                value={contractData.reference}
+                onChange={handleChange}
+                fullWidth
+                color="success"
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Autocomplete
+                options={collaborators}
+                getOptionLabel={(option) => `${option.name} ${option.firstname}`}
+                onChange={handleCollaboratorSelect}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Collaborateur"
+                    placeholder="Collaborateur"
+                    fullWidth
+                    name="collaborator"
+                    sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+                  />
+                )}
+              />
+            </Grid>
+          </Grid>
 
           <Grid container spacing={3} mb={4}>
-          <Grid item xs={4}>
+            <Grid item xs={4}>
               <TextField
                 label="Type de Contrat"
                 placeholder="Type de Contrat"
@@ -216,17 +182,20 @@ const ContratForm = ({ open, handleClose }) => {
               />
             </Grid>
             <Grid item xs={4}>
-              <TextField
-                label="Nom de Société du collaborateur"
-                placeholder="Société du collaborateur"
-                fullWidth
-                name="company"
-                value={contractData.company}
-                onChange={handleChange}
-                color="success"
-                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
-              />
-            </Grid>
+  <TextField
+    label="Nom de la société du collaborateur"
+    placeholder="Société du collaborateur"
+    fullWidth
+    value={contractData.company} // Utilisez le nom de la société stocké dans contractData
+    InputProps={{
+      readOnly: true, // Empêche l'utilisateur de modifier ce champ
+    }}
+    color="success"
+    sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+  />
+</Grid>
+
+
             <Grid item xs={4}>
               <TextField
                 label="Statut du collaborateur"

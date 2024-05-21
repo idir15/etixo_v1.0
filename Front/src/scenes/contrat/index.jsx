@@ -29,7 +29,7 @@ const Contrat = () => {
 
   const [contractToEdit, setContractToEdit] = useState(null);
  
-
+  
   const handleOpen = () => {
     setContractToEdit(null); // Réinitialise les détails du contrat pour un nouvel ajout
     setOpen(true);
