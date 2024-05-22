@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class CollaboratorService {
 
@@ -26,6 +28,9 @@ public class CollaboratorService {
         return collaboratorRepository.findAll();
     }
 
+    public Optional<Collaborator> getCollaboratorById(Long id) {
+        return collaboratorRepository.findById(id);
+    }
     public Collaborator addCollaborator(Collaborator collaborator) {
         return collaboratorRepository.save(collaborator);
 

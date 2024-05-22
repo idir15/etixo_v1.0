@@ -22,7 +22,7 @@ const ContratForm = ({ open, handleClose }) => {
     annualGrossSalary: "",
     monthlyNetSalary: "",
     monthlyEmployerCharge: "",
-    collaborator: "", // Conservez l'ID du collaborateur ici
+    collaborator: { id: "" }, // Conservez l'ID du collaborateur dans un objet
     company: "", // Ajoutez un état pour le nom de la société
   });
 
@@ -51,15 +51,15 @@ const ContratForm = ({ open, handleClose }) => {
     // Mettre à jour les données du collaborateur dans les données du contrat
     setContractData((prevData) => ({
       ...prevData,
-      collaborator: data.id, // Mettez à jour l'ID du collaborateur
+      collaborator: { id: data.id }, // Mettez à jour l'ID du collaborateur
       company: data.companyName, // Mettez à jour le nom de la société
     }));
   };
 
   useEffect(() => {
-    if (contractData.collaborator) {
+    if (contractData.collaborator.id) {
       const selectedCollaborator = collaborators.find(
-        (collab) => collab.id === contractData.collaborator
+        (collab) => collab.id === contractData.collaborator.id
       );
       if (selectedCollaborator) {
         setContractData((prevData) => ({
@@ -68,7 +68,7 @@ const ContratForm = ({ open, handleClose }) => {
         }));
       }
     }
-  }, [contractData.collaborator, collaborators]);
+  }, [contractData.collaborator.id, collaborators]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -82,7 +82,7 @@ const ContratForm = ({ open, handleClose }) => {
     if (value) {
       setContractData((prevData) => ({
         ...prevData,
-        collaborator: value.id,
+        collaborator: { id: value.id },
         company: value.companyName,
       }));
     }
@@ -96,7 +96,7 @@ const ContratForm = ({ open, handleClose }) => {
         contractData.contractType &&
         contractData.startDate &&
         contractData.endDate &&
-        contractData.collaborator
+        contractData.collaborator.id
       ) {
         // Envoyer les données du contrat à l'API
         const response = await fetch("http://localhost:8080/api/v1/addContract", {
@@ -106,10 +106,12 @@ const ContratForm = ({ open, handleClose }) => {
           },
           body: JSON.stringify(contractData),
         });
-
+  
         // Vérifier la réponse de l'API
         if (response.ok) {
+          const responseData = await response.json(); // Convertir la réponse en JSON
           console.log("Contract added successfully");
+          console.log("Response from server:", responseData); // Afficher la réponse de l'API
           handleClose();
         } else {
           console.error("Failed to add contract");
@@ -182,20 +184,18 @@ const ContratForm = ({ open, handleClose }) => {
               />
             </Grid>
             <Grid item xs={4}>
-  <TextField
-    label="Nom de la société du collaborateur"
-    placeholder="Société du collaborateur"
-    fullWidth
-    value={contractData.company} // Utilisez le nom de la société stocké dans contractData
-    InputProps={{
-      readOnly: true, // Empêche l'utilisateur de modifier ce champ
-    }}
-    color="success"
-    sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
-  />
-</Grid>
-
-
+              <TextField
+                label="Nom de la société du collaborateur"
+                placeholder="Société du collaborateur"
+                fullWidth
+                value={contractData.company} // Utilisez le nom de la société stocké dans contractData
+                InputProps={{
+                  readOnly: true, // Empêche l'utilisateur de modifier ce champ
+                }}
+                color="success"
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+              />
+            </Grid>
             <Grid item xs={4}>
               <TextField
                 label="Statut du collaborateur"
@@ -209,6 +209,7 @@ const ContratForm = ({ open, handleClose }) => {
               />
             </Grid>
           </Grid>
+
           <Grid container spacing={3} mb={4}>
             <Grid item xs={6}>
               <TextField
@@ -242,48 +243,46 @@ const ContratForm = ({ open, handleClose }) => {
             </Grid>
           </Grid>
 
-
-        <Grid container spacing={2} mb={4}>
-          <Grid item xs={4}>
-            <TextField
-              name="annualGrossSalary"
-              label="Salaire Brut Annuel"
-              type="number"
-              value={contractData.annualGrossSalary}
-              onChange={handleChange}
-              fullWidth
-              color="success"
-              sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
-            />
-          </Grid>
-          <Grid item xs={4}>
-            <TextField
+          <Grid container spacing={2} mb={4}>
+            <Grid item xs={4}>
+              <TextField
+                name="annualGrossSalary"
+                label="Salaire Brut Annuel"
+                type="number"
+                value={contractData.annualGrossSalary}
+                onChange={handleChange}
+                fullWidth
+                color="success"
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
                 name="monthlyNetSalary"
                 label="Salaire Mensuel Net"
                 type="number"
                 value={contractData.monthlyNetSalary}
                 onChange={handleChange}
                 fullWidth
-              color="success"
-              sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
-            />
+                color="success"
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                name="monthlyEmployerCharge"
+                label="Charge Mensuel Patronale"
+                type="number"
+                value={contractData.monthlyEmployerCharge}
+                onChange={handleChange}
+                fullWidth
+                color="success"
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={4}>
-            <TextField
-              name="monthlyEmployerCharge"
-              label="Charge Mensuel Patronale"
-              type="number"
-              value={contractData.monthlyEmployerCharge}
-              onChange={handleChange}
-              fullWidth
-             
-              color="success"
-              sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
-            />
-          </Grid>
-        </Grid>
-      </CardContent>
-    </DialogContent>
+        </CardContent>
+      </DialogContent>
 
       <DialogActions>
         <Button onClick={handleClose} color="secondary">
@@ -293,8 +292,8 @@ const ContratForm = ({ open, handleClose }) => {
           Soumettre
         </Button>
         <Button onClick={() => setOpenCollaboratorForm(true)} color="primary">
-        Nouveau Collaborateur
-      </Button>
+          Nouveau Collaborateur
+        </Button>
       </DialogActions>
       <CollaboratorForm
         open={openCollaboratorForm}

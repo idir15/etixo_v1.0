@@ -1,6 +1,7 @@
 package com.etixway.etixo.controller;
 
 import com.etixway.etixo.model.Collaborator;
+import com.etixway.etixo.model.Company;
 import com.etixway.etixo.service.CollaboratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/api/v1")
@@ -24,6 +27,11 @@ public class CollaboratorController {
     @GetMapping("/getAllcollaborator")
     public List<Collaborator> getAllCollaborators() {
         return collaboratorService.getAllCollaborator();
+    }
+
+    @GetMapping("/getCollaborator/{id}")
+    public Optional<Collaborator> getCollaboratorById(@PathVariable Long id) {
+        return collaboratorService.getCollaboratorById(id);
     }
 
     @PostMapping("/addcollaborator")
