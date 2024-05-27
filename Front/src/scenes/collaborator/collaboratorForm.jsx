@@ -82,18 +82,16 @@ const CollaboratorForm = ({ open, handleClose, updateCollaboratorData }) => {
       throw error;
     }
   };
-
   const handleSubmit = async () => {
+    console.log(collaboratorData);
     setErrorMessage("");
     try {
       if (
         collaboratorData.name &&
         collaboratorData.firstname &&
         collaboratorData.address &&
-        collaboratorData.dateOfBirth &&
-        collaboratorData.nationality &&
         collaboratorData.email &&
-        collaboratorData.company.id
+        collaboratorData.company.id // Vérifie si collaboratorData.company est défini avant d'accéder à son id
       ) {
         const addedCollaborator = await addCollaboratorToDB(collaboratorData);
         updateCollaboratorData(addedCollaborator);
