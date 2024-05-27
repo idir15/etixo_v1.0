@@ -92,10 +92,8 @@ const CollaboratorForm = ({ open, handleClose, updateCollaboratorData }) => {
         collaboratorData.address &&
         collaboratorData.dateOfBirth &&
         collaboratorData.nationality &&
-        collaboratorData.phone &&
         collaboratorData.email &&
-        collaboratorData.company.id &&
-        collaboratorData.socialSecurityNumber
+        collaboratorData.company.id
       ) {
         const addedCollaborator = await addCollaboratorToDB(collaboratorData);
         updateCollaboratorData(addedCollaborator);
@@ -110,7 +108,7 @@ const CollaboratorForm = ({ open, handleClose, updateCollaboratorData }) => {
   };
 
   const nationalites = [
-    "France", "Algérie", "Maroc", "Suisse", "Belgique", "Espagne", "Italie"
+    "France", "Algérie", "Maroc", "Suisse", "Belgique", "Espagne", "Italie", "Tunisie"
   ];
 
   return (

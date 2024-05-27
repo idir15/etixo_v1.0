@@ -22,15 +22,15 @@ const ContratForm = ({ open, handleClose }) => {
     annualGrossSalary: "",
     monthlyNetSalary: "",
     monthlyEmployerCharge: "",
-    collaborator: { id: "", name: "", firstname: "", companyName: "" },
-    company: "",
+    collaborator: { id: "" }, // Conservez l'ID du collaborateur dans un objet
+    company:"", // Ajoutez un état pour le nom de la société
   });
 
   const [openCollaboratorForm, setOpenCollaboratorForm] = useState(false);
-  const [collaborators, setCollaborators] = useState([]);
+  const [collaborators, setCollaborators] = useState([]); // Liste des collaborateurs
 
   useEffect(() => {
-    fetchCollaborators();
+    fetchCollaborators(); // Appel à la fonction pour récupérer la liste des collaborateurs au chargement du composant
   }, []);
 
   const fetchCollaborators = async () => {
@@ -38,7 +38,7 @@ const ContratForm = ({ open, handleClose }) => {
       const response = await fetch("http://localhost:8080/api/v1/getAllcollaborator");
       if (response.ok) {
         const data = await response.json();
-        setCollaborators(data);
+        setCollaborators(data); // Stockage de la liste des collaborateurs dans l'état local
       } else {
         console.error("Failed to fetch collaborators");
       }
@@ -48,12 +48,12 @@ const ContratForm = ({ open, handleClose }) => {
   };
 
   const updateCollaboratorData = (data) => {
+    // Mettre à jour les données du collaborateur dans les données du contrat
     setContractData((prevData) => ({
       ...prevData,
-      collaborator: { id: data.id, name: data.name, firstname: data.firstname, companyName: data.companyName },
-      company: data.companyName,
+      collaborator: { id: data.id }, // Mettez à jour l'ID du collaborateur
+      company: data.companyName, // Mettez à jour le nom de la société
     }));
-    setCollaborators((prevCollaborators) => [...prevCollaborators, data]);
   };
 
   useEffect(() => {
@@ -82,39 +82,42 @@ const ContratForm = ({ open, handleClose }) => {
     if (value) {
       setContractData((prevData) => ({
         ...prevData,
-        collaborator: { id: value.id, name: value.name, firstname: value.firstname, companyName: value.companyName },
+        collaborator: { id: value.id },
         company: value.companyName,
       }));
     }
   };
 
   const handleSubmit = async () => {
-    if (
-      !contractData.reference ||
-      !contractData.contractType ||
-      !contractData.startDate ||
-      !contractData.collaborator.id
-    ) {
-      console.error("Veuillez remplir tous les champs obligatoires");
-      return;
-    }
-
     try {
-      const response = await fetch("http://localhost:8080/api/v1/addContract", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(contractData),
-      });
-
-      if (response.ok) {
-        const responseData = await response.json();
-        console.log("Contract added successfully");
-        console.log("Response from server:", responseData);
-        handleClose();
+      // Vérifier que les champs obligatoires sont remplis
+      if (
+        contractData.reference &&
+        contractData.contractType &&
+        contractData.startDate &&
+        contractData.endDate &&
+        contractData.collaborator.id
+      ) {
+        // Envoyer les données du contrat à l'API
+        const response = await fetch("http://localhost:8080/api/v1/addContract", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(contractData),
+        });
+  
+        // Vérifier la réponse de l'API
+        if (response.ok) {
+          const responseData = await response.json(); // Convertir la réponse en JSON
+          console.log("Contract added successfully");
+          console.log("Response from server:", responseData); // Afficher la réponse de l'API
+          handleClose();
+        } else {
+          console.error("Failed to add contract");
+        }
       } else {
-        console.error("Failed to add contract");
+        console.error("Veuillez remplir tous les champs obligatoires");
       }
     } catch (error) {
       console.error("Error adding contract:", error);
@@ -122,19 +125,13 @@ const ContratForm = ({ open, handleClose }) => {
   };
 
   return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      fullWidth
-      maxWidth="lg"
-      sx={{
-        "& .MuiDialog-paper": {
-          width: "70%",
-          maxWidth: "none",
-          maxHeight: "70vh",
-        },
-      }}
-    >
+    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="lg" sx={{
+      "& .MuiDialog-paper": {
+        width: "70%",
+        maxWidth: "none",
+        maxHeight: "70vh"
+      }
+    }}>
       <DialogTitle sx={{ backgroundColor: "#048B9A", color: "#fff" }}>
         Nouveau Contrat
       </DialogTitle>
@@ -151,7 +148,7 @@ const ContratForm = ({ open, handleClose }) => {
                 onChange={handleChange}
                 fullWidth
                 color="success"
-                sx={{ "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input": { fontSize: "18px" } }}
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
               />
             </Grid>
             <Grid item xs={6}>
@@ -166,7 +163,7 @@ const ContratForm = ({ open, handleClose }) => {
                     placeholder="Collaborateur"
                     fullWidth
                     name="collaborator"
-                    sx={{ "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input": { fontSize: "18px" } }}
+                    sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
                   />
                 )}
               />
@@ -183,7 +180,7 @@ const ContratForm = ({ open, handleClose }) => {
                 value={contractData.contractType}
                 onChange={handleChange}
                 color="success"
-                sx={{ "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input": { fontSize: "18px" } }}
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
               />
             </Grid>
             <Grid item xs={4}>
@@ -191,12 +188,12 @@ const ContratForm = ({ open, handleClose }) => {
                 label="Nom de la société du collaborateur"
                 placeholder="Société du collaborateur"
                 fullWidth
-                value={contractData.company}
+                value={contractData.company} // Utilisez le nom de la société stocké dans contractData
                 InputProps={{
-                  readOnly: true,
+                  readOnly: true, // Empêche l'utilisateur de modifier ce champ
                 }}
                 color="success"
-                sx={{ "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input": { fontSize: "18px" } }}
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
               />
             </Grid>
             <Grid item xs={4}>
@@ -204,11 +201,11 @@ const ContratForm = ({ open, handleClose }) => {
                 label="Statut du collaborateur"
                 placeholder="Statut du collaborateur"
                 fullWidth
-                name="status"
+                name="statut"
                 value={contractData.status}
                 onChange={handleChange}
                 color="success"
-                sx={{ "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input": { fontSize: "18px" } }}
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
               />
             </Grid>
           </Grid>
@@ -226,7 +223,7 @@ const ContratForm = ({ open, handleClose }) => {
                   shrink: true,
                 }}
                 color="success"
-                sx={{ "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input": { fontSize: "18px" } }}
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
               />
             </Grid>
             <Grid item xs={6}>
@@ -241,7 +238,7 @@ const ContratForm = ({ open, handleClose }) => {
                   shrink: true,
                 }}
                 color="success"
-                sx={{ "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input": { fontSize: "18px" } }}
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
               />
             </Grid>
           </Grid>
@@ -256,7 +253,7 @@ const ContratForm = ({ open, handleClose }) => {
                 onChange={handleChange}
                 fullWidth
                 color="success"
-                sx={{ "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input": { fontSize: "18px" } }}
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
               />
             </Grid>
             <Grid item xs={4}>
@@ -268,39 +265,40 @@ const ContratForm = ({ open, handleClose }) => {
                 onChange={handleChange}
                 fullWidth
                 color="success"
-                sx={{ "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input": { fontSize: "18px" } }}
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
               />
             </Grid>
             <Grid item xs={4}>
               <TextField
                 name="monthlyEmployerCharge"
-                label="Charge Mensuelle Employeur"
+                label="Charge Mensuel Patronale"
                 type="number"
                 value={contractData.monthlyEmployerCharge}
                 onChange={handleChange}
                 fullWidth
                 color="success"
-                sx={{ "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input": { fontSize: "18px" } }}
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
               />
             </Grid>
           </Grid>
         </CardContent>
       </DialogContent>
+
       <DialogActions>
         <Button onClick={handleClose} color="secondary">
           Annuler
         </Button>
         <Button onClick={handleSubmit} color="primary">
-          Enregistrer
+          Soumettre
         </Button>
         <Button onClick={() => setOpenCollaboratorForm(true)} color="primary">
-          Ajouter Collaborateur
+          Nouveau Collaborateur
         </Button>
       </DialogActions>
       <CollaboratorForm
         open={openCollaboratorForm}
         handleClose={() => setOpenCollaboratorForm(false)}
-        updateCollaboratorData={updateCollaboratorData} // Pass the update function
+        updateCollaboratorData={updateCollaboratorData}
       />
     </Dialog>
   );
