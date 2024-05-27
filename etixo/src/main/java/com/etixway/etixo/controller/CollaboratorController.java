@@ -35,10 +35,7 @@ public class CollaboratorController {
     }
 
     @PostMapping("/addcollaborator")
-    public Collaborator addCollaborators(@RequestBody Collaborator collaborator) {
-        return collaboratorService.addCollaborator(collaborator);
-
-    }
+    public Collaborator addCollaborators(@RequestBody Collaborator collaborator) { return collaboratorService.addCollaborator(collaborator); }
 
     @DeleteMapping("/deleteCollaborator/{id}")
     public ResponseEntity<String> deleteCollaborator(@PathVariable Long id) {

@@ -3,6 +3,8 @@ package com.etixway.etixo.model;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
+import static jakarta.persistence.CascadeType.PERSIST;
+
 @Entity
 public class Collaborator {
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,26 +32,15 @@ public class Collaborator {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "company_name")
-    private String companyName;
-
     @Column(name = "social_security_number")
     private String socialSecurityNumber;
+    @ManyToOne(cascade = {PERSIST})
+    @JoinColumn(name = "id_company")
+    private Company company;
+
 
     public Collaborator(){}
 
-    public Collaborator(Long id, String name, String firstname, String address, LocalDate dateOfBirth, String nationality, String phone, String email, String companyName, String socialSecurityNumber) {
-        this.id = id;
-        this.name = name;
-        this.firstname = firstname;
-        this.address = address;
-        this.dateOfBirth = dateOfBirth;
-        this.nationality = nationality;
-        this.phone = phone;
-        this.email = email;
-        this.companyName = companyName;
-        this.socialSecurityNumber = socialSecurityNumber;
-    }
 
     public Long getId() {
         return id;
@@ -115,14 +106,6 @@ public class Collaborator {
         this.email = email;
     }
 
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
     public String getSocialSecurityNumber() {
         return socialSecurityNumber;
     }
@@ -131,6 +114,13 @@ public class Collaborator {
         this.socialSecurityNumber = socialSecurityNumber;
     }
 
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
     @Override
     public String toString() {
         return "Collaborator{" +
@@ -142,8 +132,8 @@ public class Collaborator {
                 ", nationality='" + nationality + '\'' +
                 ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
-                ", companyName='" + companyName + '\'' +
                 ", socialSecurityNumber='" + socialSecurityNumber + '\'' +
+                ", company='" + company + '\'' +
                 '}';
     }
 }
