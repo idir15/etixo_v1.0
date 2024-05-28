@@ -1,6 +1,9 @@
 package com.etixway.etixo.service;
 
 import com.etixway.etixo.model.Collaborator;
+import com.etixway.etixo.model.Company;
+import com.etixway.etixo.model.Contract;
+import com.etixway.etixo.repository.CompanyRepository;
 import com.etixway.etixo.repository.CollaboratorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,12 +19,15 @@ public class CollaboratorService {
 
     @Autowired
     private CollaboratorRepository collaboratorRepository;
+
+    private CompanyRepository companyRepository;
+
+    private CompanyService companyService;
     @Autowired
-    public CollaboratorService(CollaboratorRepository collaboratorRepository) {
+    public CollaboratorService(CollaboratorRepository collaboratorRepository, CompanyRepository companyRepository) {
         this.collaboratorRepository = collaboratorRepository;
+        this.companyRepository = companyRepository;
     }
-
-
 
 
     public List<Collaborator> getAllCollaborator() {
@@ -31,9 +37,15 @@ public class CollaboratorService {
     public Optional<Collaborator> getCollaboratorById(Long id) {
         return collaboratorRepository.findById(id);
     }
-    public Collaborator addCollaborator(Collaborator collaborator) {
-        return collaboratorRepository.save(collaborator);
 
+
+    public Collaborator addCollaborator(Collaborator collaborator) {
+        Long companyId = collaborator.getCompany().getId();
+
+        Company existingCompany = companyRepository.findById(companyId)
+                .orElseThrow(() -> new RuntimeException("Company with ID " + companyId + " not found"));
+        collaborator.setCompany(existingCompany);
+        return collaboratorRepository.save(collaborator);
     }
 
     public ResponseEntity<String> deleteCollaborator(@PathVariable Long id) {

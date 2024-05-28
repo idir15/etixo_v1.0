@@ -47,7 +47,11 @@ const Collaborator = () => {
       const response = await fetch("http://localhost:8080/api/v1/getAllcollaborator");
       if (response.ok) {
         const data = await response.json();
-        return data;
+        const transformedData = data.map(collaborator => ({
+          ...collaborator,
+          companyName: collaborator.company.name ,
+        }));
+        return transformedData;
       } else {
         console.error("Failed to fetch collaborator");
         return [];

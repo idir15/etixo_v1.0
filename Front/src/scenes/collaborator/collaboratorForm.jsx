@@ -53,6 +53,13 @@ const CollaboratorForm = ({ open, handleClose, updateCollaboratorData }) => {
     }));
   };
 
+  const handleNationalityChange = (event, value) => {
+    setCollaboratorData((prevData) => ({
+      ...prevData,
+      nationality: value,
+    }));
+  };
+  
   const handleCompanyChange = (event, value) => {
     setCollaboratorData((prevData) => ({
       ...prevData,
@@ -105,8 +112,8 @@ const CollaboratorForm = ({ open, handleClose, updateCollaboratorData }) => {
     }
   };
 
-  const nationalites = [
-    "France", "Algérie", "Maroc", "Suisse", "Belgique", "Espagne", "Italie", "Tunisie"
+  const nationalityOptions = [
+    "France", "Algérie", "Maroc", "Suisse", "Belgique", "Espagne", "Italie", "Tunisie",
   ];
 
   return (
@@ -169,22 +176,21 @@ const CollaboratorForm = ({ open, handleClose, updateCollaboratorData }) => {
             </Grid>
             <Grid item xs={6}>
               <Autocomplete
-                freeSolo
-                options={nationalites}
+                options={nationalityOptions}
+                value={collaboratorData.nationality}
+                onChange={handleNationalityChange}
                 renderInput={(params) => (
                   <TextField
                     {...params}
                     label="Nationalité"
                     placeholder="Nationalité"
                     fullWidth
-                    name="nationality"
-                    value={collaboratorData.nationality}
                     color="success"
-                    onChange={handleChange}
                   />
                 )}
               />
             </Grid>
+
           </Grid>
           <Grid container spacing={3} mb={4}>
             <Grid item xs={4}>
