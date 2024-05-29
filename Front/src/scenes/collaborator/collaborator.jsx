@@ -1,3 +1,5 @@
+// Collaborator.js
+
 import React, { useState, useEffect } from "react";
 import {
   Button,
@@ -16,6 +18,7 @@ import { useTheme } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
+import CollaboratorForm from "./collaboratorForm";
 
 const Collaborator = () => {
   const theme = useTheme();
@@ -24,6 +27,8 @@ const Collaborator = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [idToDelete, setIdToDelete] = useState(null);
   const [collaborator, setCollaborator] = useState([]);
+  const [editData, setEditData] = useState(null);
+  const [openForm, setOpenForm] = useState(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -31,6 +36,8 @@ const Collaborator = () => {
 
   const handleClose = () => {
     setOpen(false);
+    setOpenForm(false);
+    setEditData(null);
   };
 
   const handleDialogOpen = (id) => {
@@ -90,7 +97,9 @@ const Collaborator = () => {
   };
 
   const handleEdit = (id) => {
-    console.log("Modifier l'élément avec l'ID :", id);
+    const collaboratorToEdit = collaborator.find(collab => collab.id === id);
+    setEditData(collaboratorToEdit);
+    setOpenForm(true);
   };
 
   const columns = [
@@ -121,7 +130,6 @@ const Collaborator = () => {
       <Box m="20px">
         <Header
           title="Collaborateur"
-        
         />
         <Box
           m="30px 0 0 0"
@@ -180,16 +188,26 @@ const Collaborator = () => {
           <p>Voulez-vous vraiment supprimer ce collaborateur ? Cette opération ne peut pas être annulée.</p>
         </DialogContent>
         <DialogActions style={{ border: 'none', textAlign: 'center', borderRadius: '5px', fontSize: '13px', padding: '10px 15px 25px' }}>
-          <Button onClick={handleDialogClose} color="info" size="large" style={{ color: '#999', minWidth: '120px', border: 'none', minHeight: '40px', borderRadius: '3px', margin: '0 5px', outline: 'none !important' }}>
-            Annuler
-          </Button>
-          <Button onClick={handleDelete} color="error" size="large" style={{ color: '#fff', minWidth: '120px', border: 'none', minHeight: '40px', borderRadius: '3px', margin: '0 5px', outline: 'none !important', background: '#f15e5e' }}>
-            Supprimer
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
-  );
+          <Button onClick={handleDialogClose} color="info" size="large"
+style={{ color: '#999', minWidth: '120px', border: 'none', minHeight: '40px', borderRadius: '3px', margin: '0 5px', outline: 'none !important' }}>
+Annuler
+</Button>
+<Button onClick={handleDelete} color="error" size="large" style={{ color: '#fff', minWidth: '120px', border: 'none', minHeight: '40px', borderRadius: '3px', margin: '0 5px', outline: 'none !important', background: '#f15e5e' }}>
+Supprimer
+</Button>
+</DialogActions>
+</Dialog>
+<CollaboratorForm
+open={openForm}
+handleClose={handleClose}
+updateCollaboratorData={(updatedCollaborator) => {
+const updatedList = collaborator.map(item => item.id === updatedCollaborator.id ? updatedCollaborator : item);
+setCollaborator(updatedList);
+}}
+editData={editData}
+/>
+</>
+);
 };
 
 export default Collaborator;

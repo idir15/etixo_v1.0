@@ -11,7 +11,7 @@ import {
   Autocomplete,
 } from "@mui/material";
 
-const CollaboratorForm = ({ open, handleClose, updateCollaboratorData }) => {
+const CollaboratorForm = ({ open, handleClose, updateCollaboratorData, editData }) => {
   const [collaboratorData, setCollaboratorData] = useState({
     name: "",
     firstname: "",
@@ -20,12 +20,18 @@ const CollaboratorForm = ({ open, handleClose, updateCollaboratorData }) => {
     nationality: "",
     phone: "",
     email: "",
-    company: null, // Utiliser l'objet Company
+    company: null,
     socialSecurityNumber: "",
   });
 
   const [errorMessage, setErrorMessage] = useState("");
   const [companies, setCompanies] = useState([]);
+
+  useEffect(() => {
+    if (editData) {
+      setCollaboratorData(editData);
+    }
+  }, [editData]);
 
   useEffect(() => {
     fetchCompanies();
@@ -63,52 +69,38 @@ const CollaboratorForm = ({ open, handleClose, updateCollaboratorData }) => {
   const handleCompanyChange = (event, value) => {
     setCollaboratorData((prevData) => ({
       ...prevData,
-      company: value ? value : null, // Mettre à jour l'objet Company
+      company: value ? value : null,
     }));
   };
 
-  const addCollaboratorToDB = async (collaborator) => {
+  const handleSubmit = async () => {
+    setErrorMessage("");
     try {
-      const response = await fetch("http://localhost:8080/api/v1/addcollaborator", {
-        method: "POST",
+      let url = "http://localhost:8080/api/v1/addcollaborator";
+      let method = "POST"; 
+  
+      if (collaboratorData.id) {
+        url = `http://localhost:8080/api/v1/updatedCollaborator/${collaboratorData.id}`;
+        method = "PUT";
+      }
+  
+      const response = await fetch(url, {
+        method: method,
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(collaborator),
+        body: JSON.stringify(collaboratorData),
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Erreur lors de l'ajout du collaborateur");
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Erreur lors de l'ajout du collaborateur:", error);
-      throw error;
-    }
-  };
-  const handleSubmit = async () => {
-    console.log(collaboratorData);
-    setErrorMessage("");
-    try {
-      if (
-        collaboratorData.name &&
-        collaboratorData.firstname &&
-        collaboratorData.address &&
-        collaboratorData.email &&
-        collaboratorData.company.id // Vérifie si collaboratorData.company est défini avant d'accéder à son id
-      ) {
-        const addedCollaborator = await addCollaboratorToDB(collaboratorData);
-        updateCollaboratorData(addedCollaborator);
-        console.log("Données du collaborateur:", addedCollaborator);
+  
+      if (response.ok) {
+        console.log("Collaborator added/updated successfully");
         handleClose();
+        updateCollaboratorData(collaboratorData);
       } else {
-        setErrorMessage("Veuillez remplir tous les champs obligatoires");
+        console.error("Failed to add/update collaborator");
       }
     } catch (error) {
-      setErrorMessage(error.message || "Erreur lors de l'ajout du collaborateur");
+      console.error("Error adding/updating collaborator:", error);
     }
   };
 
@@ -131,7 +123,7 @@ const CollaboratorForm = ({ open, handleClose, updateCollaboratorData }) => {
       }}
     >
       <DialogTitle sx={{ backgroundColor: "#82C9D1", color: "#fff" }}>
-        Nouveau Collaborateur
+        {editData ? "Modifier Collaborateur" : "Nouveau Collaborateur"}
       </DialogTitle>
       <DialogContent>
         <CardContent>
@@ -190,7 +182,6 @@ const CollaboratorForm = ({ open, handleClose, updateCollaboratorData }) => {
                 )}
               />
             </Grid>
-
           </Grid>
           <Grid container spacing={3} mb={4}>
             <Grid item xs={4}>
@@ -246,6 +237,7 @@ const CollaboratorForm = ({ open, handleClose, updateCollaboratorData }) => {
               <Autocomplete
                 options={companies}
                 getOptionLabel={(option) => option.name}
+                value={collaboratorData.company} // Ensure this is an object with the necessary data
                 onChange={handleCompanyChange}
                 renderInput={(params) => (
                   <TextField
@@ -257,6 +249,7 @@ const CollaboratorForm = ({ open, handleClose, updateCollaboratorData }) => {
                     sx={{ "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input": { fontSize: "18px" } }}
                   />
                 )}
+                getOptionSelected={(option, value) => option.id === value.id} // Add this line
               />
             </Grid>
           </Grid>
@@ -268,7 +261,7 @@ const CollaboratorForm = ({ open, handleClose, updateCollaboratorData }) => {
           Annuler
         </Button>
         <Button onClick={handleSubmit} color="primary">
-          Ajouter
+          {editData ? "Modifier" : "Ajouter"}
         </Button>
       </DialogActions>
     </Dialog>
