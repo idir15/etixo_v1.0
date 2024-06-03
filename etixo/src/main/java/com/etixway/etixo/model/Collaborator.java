@@ -39,8 +39,27 @@ public class Collaborator {
     private Company company;
 
 
+    @ManyToOne(cascade = {PERSIST})
+    @JoinColumn(name = "id_company")
+    private Company company;
+
     public Collaborator(){}
 
+<<<<<<< HEAD
+=======
+    public Collaborator(Long id, String name, String firstname, String address, LocalDate dateOfBirth, String nationality, String phone, String email, String socialSecurityNumber, Company company) {
+        this.id = id;
+        this.name = name;
+        this.firstname = firstname;
+        this.address = address;
+        this.dateOfBirth = dateOfBirth;
+        this.nationality = nationality;
+        this.phone = phone;
+        this.email = email;
+        this.socialSecurityNumber = socialSecurityNumber;
+        this.company = company;
+    }
+>>>>>>> master_idir
 
     public Long getId() {
         return id;

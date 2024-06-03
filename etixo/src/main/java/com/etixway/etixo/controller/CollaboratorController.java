@@ -42,6 +42,10 @@ public class CollaboratorController {
         return collaboratorService.deleteCollaborator(id);
     }
 
+    @PutMapping("/updatedCollaborator/{id}")
+    public ResponseEntity<String>  updateCollaboratorById(@PathVariable Long id, @RequestBody Collaborator updatedCollaborator) {
+        return collaboratorService. updateCollaboratorById(id, updatedCollaborator);
+    }
 
 
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   CardContent,
@@ -11,18 +11,45 @@ import {
   Autocomplete,
 } from "@mui/material";
 
-const CollaboratorForm = ({ open, handleClose }) => {
+const CollaboratorForm = ({ open, handleClose, updateCollaboratorData, editData }) => {
   const [collaboratorData, setCollaboratorData] = useState({
     name: "",
-    firstName: "",
+    firstname: "",
     address: "",
     dateOfBirth: "",
     nationality: "",
     phone: "",
     email: "",
-    companyName: "",
+    company: null,
     socialSecurityNumber: "",
   });
+
+  const [errors, setErrors] = useState({});
+  const [companies, setCompanies] = useState([]);
+
+  useEffect(() => {
+    if (editData) {
+      setCollaboratorData(editData);
+    }
+  }, [editData]);
+
+  useEffect(() => {
+    fetchCompanies();
+  }, []);
+
+  const fetchCompanies = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/v1/getAllCompanies");
+      if (response.ok) {
+        const data = await response.json();
+        setCompanies(data);
+      } else {
+        console.error("Failed to fetch companies");
+      }
+    } catch (error) {
+      console.error("Error fetching companies:", error);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,33 +57,87 @@ const CollaboratorForm = ({ open, handleClose }) => {
       ...prevData,
       [name]: value,
     }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: "",
+    }));
   };
-  const sendDataToParent = (data) => {
-    // Mettre à jour l'état du parent avec les données du collaborateur
-    setCollaboratorData(data);
+
+  const handleNationalityChange = (event, value) => {
+    setCollaboratorData((prevData) => ({
+      ...prevData,
+      nationality: value,
+    }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      nationality: "",
+    }));
   };
   
-  const handleSubmit = async () => {
-    try {
-      if (collaboratorData.name && collaboratorData.firstName && collaboratorData.address) {
-        console.log("Données du collaborateur:", collaboratorData);
-        handleClose();
-        // Appeler la fonction du parent pour envoyer les données du collaborateur
-        sendDataToParent(collaboratorData);
-      } else {
-        console.error("Veuillez remplir tous les champs obligatoires");
+  const handleCompanyChange = (event, value) => {
+    setCollaboratorData((prevData) => ({
+      ...prevData,
+      company: value ? value : null,
+    }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      company: "",
+    }));
+  };
+
+  const validateFields = () => {
+    const newErrors = {};
+    const requiredFields = ["name", "firstname", "dateOfBirth", "nationality", "email", "company"];
+
+    requiredFields.forEach((field) => {
+      if (!collaboratorData[field]) {
+        newErrors[field] = "Ce champ est obligatoire";
       }
-    } catch (error) {
-      console.error("Erreur lors de l'ajout du collaborateur:", error);
+    });
+
+    if (collaboratorData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(collaboratorData.email)) {
+      newErrors.email = "Adresse email invalide";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async () => {
+    if (validateFields()) {
+      try {
+        let url = "http://localhost:8080/api/v1/addcollaborator";
+        let method = "POST"; 
+    
+        if (collaboratorData.id) {
+          url = `http://localhost:8080/api/v1/updateCollaborator/${collaboratorData.id}`;
+          method = "PUT";
+        }
+    
+        const response = await fetch(url, {
+          method: method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(collaboratorData),
+        });
+    
+        if (response.ok) {
+          console.log("Collaborator added/updated successfully");
+          handleClose();
+          updateCollaboratorData(collaboratorData);
+        } else {
+          console.error("Failed to add/update collaborator");
+        }
+      } catch (error) {
+        console.error("Error adding/updating collaborator:", error);
+      }
     }
   };
-  
-  
-  
 
-  // Liste des nationalités
-  const nationalites = [
-    "France", "Algérie", "Maroc", "Suisse", "Belgique", "Espagne", "Italie" /* Ajoutez d'autres nationalités ici */
+  const nationalityOptions = [
+    "France", "Algérie", "Maroc", "Suisse", "Belgique", "Espagne", "Italie", "Tunisie",
   ];
 
   return (
@@ -73,32 +154,38 @@ const CollaboratorForm = ({ open, handleClose }) => {
         },
       }}
     >
-      <DialogTitle sx={{ backgroundColor: "#82C9D1", color: "#fff" }}>
-        Nouveau Collaborateur
+      <DialogTitle sx={{ backgroundColor: "#048B9A", color: "#fff", fontSize: "18px" }}>
+        {editData ? "Modifier Collaborateur" : "Nouveau Collaborateur"}
       </DialogTitle>
       <DialogContent>
         <CardContent>
           <Grid container spacing={3} mb={4}>
             <Grid item xs={6}>
               <TextField
-                label="Nom Collaborateur"
+                label="Nom Collaborateur *"
                 placeholder="Nom Collaborateur"
                 fullWidth
                 name="name"
                 value={collaboratorData.name}
                 color="success"
                 onChange={handleChange}
+                error={!!errors.name}
+                helperText={errors.name}
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
               />
             </Grid>
             <Grid item xs={6}>
               <TextField
-                label="Prénom Collaborateur"
+                label="Prénom Collaborateur *"
                 placeholder="Prénom Collaborateur"
                 fullWidth
-                name="firstName"
-                value={collaboratorData.firstName}
+                name="firstname"
+                value={collaboratorData.firstname}
                 color="success"
                 onChange={handleChange}
+                error={!!errors.firstname}
+                helperText={errors.firstname}
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
               />
             </Grid>
           </Grid>
@@ -106,7 +193,7 @@ const CollaboratorForm = ({ open, handleClose }) => {
             <Grid item xs={6}>
               <TextField
                 name="dateOfBirth"
-                label="Date de Naissance"
+                label="Date de Naissance *"
                 type="date"
                 fullWidth
                 InputLabelProps={{
@@ -115,106 +202,139 @@ const CollaboratorForm = ({ open, handleClose }) => {
                 value={collaboratorData.dateOfBirth}
                 color="success"
                 onChange={handleChange}
+                error={!!errors.dateOfBirth}
+                helperText={errors.dateOfBirth}
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
               />
             </Grid>
             <Grid item xs={6}>
               <Autocomplete
-                freeSolo
-                options={nationalites}
+                options={nationalityOptions}
+                value={collaboratorData.nationality}
+                onChange={handleNationalityChange}
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Nationalité"
+                    label="Nationalité *"
                     placeholder="Nationalité"
                     fullWidth
-                    name="nationality"
-                    value={collaboratorData.nationality}
                     color="success"
-                    onChange={handleChange}
+                    error={!!errors.nationality}
+                    helperText={errors.nationality}
+                    sx={{
+                      '& .MuiInputBase-input': {
+                        fontSize: '18px',
+                      },
+                    }}
                   />
                 )}
               />
             </Grid>
           </Grid>
-         
           <Grid container spacing={3} mb={4}>
-          
-          <Grid item xs={4}>
-            <TextField
-              label="Téléphone"
-              placeholder="Téléphone"
-              fullWidth
-              type="number"
-              name="phone"
-              value={collaboratorData.phone}
-              color="success"
-              onChange={handleChange}
-            />
+            <Grid item xs={4}>
+              <TextField
+                label="Téléphone"
+                placeholder="Téléphone"
+                fullWidth
+                type="number"
+                name="phone"
+                value={collaboratorData.phone}
+                color="success"
+                onChange={handleChange}
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                label="Email *"
+                placeholder="Email"
+                fullWidth
+                type="email"
+                name="email"
+                value={collaboratorData.email}
+                color="success"
+                onChange={handleChange}
+                error={!!errors.email}
+                helperText={errors.email}
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                label="Numéro Sécurité Sociale"
+                placeholder="Numéro Sécurité Sociale"
+                fullWidth
+                type="number"
+                name="socialSecurityNumber"
+                value={collaboratorData.socialSecurityNumber}
+                color="success"
+                onChange={handleChange}
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={4}>
-            <TextField
-              label="Email"
-              placeholder="Email"
-              fullWidth
-              type="email"
-              name="email"
-              value={collaboratorData.email}
-              color="success"
-              onChange={handleChange}
-            />
+          <Grid container spacing={3} mb={4}>
+            <Grid item xs={6}>
+              <TextField
+                label="Adresse Collaborateur"
+                placeholder="Adresse Collaborateur"
+                fullWidth
+                name="address"
+                value={collaboratorData.address}
+                color="success"
+                onChange={handleChange}
+                sx={{ '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': { fontSize: '18px' } }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Autocomplete
+                options={companies}
+                getOptionLabel={(option) => option.name}
+                value={collaboratorData.company}
+                onChange={handleCompanyChange}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Entreprise *"
+                    placeholder="Entreprise"
+                    fullWidth
+                    color="success"
+                    error={!!errors.company}
+                    helperText={errors.company}
+                    sx={{
+                      '& .MuiInputBase-input': {
+                        fontSize: '18px',
+                      },
+                    }}
+                  />
+                )}
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={4}>
-            <TextField
-              label="Numéro Securité Sociale"
-              placeholder="Numero Securité Sociale"
-              fullWidth
-              type="number"
-              name="socialSecurityNumber"
-              value={collaboratorData.socialSecurityNumber}
-              color="success"
-              onChange={handleChange}
-            />
-          </Grid>
-          
-        </Grid>
-
-
-        <Grid container spacing={3} mb={4}>
-        <Grid item xs={6}>
-            <TextField
-              label="Adresse Collaborateur"
-              placeholder="Adresse Collaborateur"
-              fullWidth
-              name="address"
-              value={collaboratorData.address}
-              color="success"
-              onChange={handleChange}
-            />
-          </Grid>
-          
-          <Grid item xs={6}>
-            <TextField
-              label="Nom Compagnie"
-              placeholder="Nom Compagnie"
-              fullWidth
-              name="companyName"
-              value={collaboratorData.companyName}
-              color="success"
-              onChange={handleChange}
-            />
-          </Grid>
-          
-        
-        </Grid>
         </CardContent>
+        {errors.general && <p style={{ color: 'red' }}>{errors.general}</p>}
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="secondary">
-          Annuler
-        </Button>
-        <Button onClick={handleSubmit} color="primary">
-          Soumettre
-        </Button>
+
+      <Button
+              variant="contained"
+              style={{ backgroundColor: '#ecf0f0', color: '#000000' }}
+              size="large"
+              onClick={handleClose}
+            >
+              Annuler
+            </Button>
+        
+        <Button
+              variant="contained"
+              style={{ backgroundColor: '#048B9A', color: '#FFFFFF' }}
+              size="large"
+              onClick={handleSubmit}
+            >
+              {editData ? "Modifier" : "Ajouter"}
+            </Button>
+
       </DialogActions>
     </Dialog>
   );
