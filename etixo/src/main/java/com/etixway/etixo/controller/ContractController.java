@@ -36,7 +36,7 @@ public class ContractController {
         return contractService.deleteContract(id);
     }
 
-    @GetMapping("/getContract/{id}")
+    @GetMapping("/getContractById/{id}")
     public Optional<Contract> getContractById(@PathVariable Long id) {
         return contractService.getContractById(id);
     }

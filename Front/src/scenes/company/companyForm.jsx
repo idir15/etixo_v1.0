@@ -180,7 +180,7 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
         },
       }}
     >
-      <DialogTitle sx={{ backgroundColor: "#048B9A" }}>
+      <DialogTitle sx={{ backgroundColor: "#048B9A", color: "#fff", fontSize: "18px"  }}>
         {isEditMode ? "Modifier l'entreprise" : "Nouvelle Compagnie"}
       </DialogTitle>
       <DialogContent>
@@ -335,13 +335,28 @@ const CompanyForm = ({ open, handleClose, company, handleSubmit }) => {
         </CardContent>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="secondary">
-          Annuler
-        </Button>
-        <Button onClick={handleSubmitForm} color="primary">
-          {isEditMode ? "Modifier" : "Ajouter"}
-        </Button>
+
+        <Button
+              variant="contained"
+              style={{ backgroundColor: '#ecf0f0', color: '#000000' }}
+              size="large"
+              onClick={handleClose}
+            >
+              Annuler
+            </Button>
+        
+        <Button
+              variant="contained"
+              style={{ backgroundColor: '#048B9A', color: '#FFFFFF' }}
+              size="large"
+              onClick={handleSubmitForm}
+            >
+              {isEditMode ? "Modifier" : "Ajouter"}
+            </Button>
       </DialogActions>
+
+      
+
     </Dialog>
   );
 };

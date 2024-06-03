@@ -9,7 +9,6 @@ import {
   Typography,
 } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
 import ContratForm from "./contratForm";
@@ -17,15 +16,16 @@ import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { tokens } from "../../theme";
 
 const Contrat = () => {
   const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
   const [open, setOpen] = useState(false);
   const [contracts, setContracts] = useState([]);
   const [idToDelete, setIdToDelete] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [contractToEdit, setContractToEdit] = useState(null);
+  const colors = tokens(theme.palette.mode);
 
   const handleOpen = () => {
     setContractToEdit(null);
@@ -65,10 +65,12 @@ const Contrat = () => {
   };
 
   const handleEdit = async (id) => {
+    console.log("handleEdit called with id:", id);
     try {
       const response = await fetch(`http://localhost:8080/api/v1/getContractById/${id}`);
       if (response.ok) {
         const contractData = await response.json();
+        console.log("Contract data fetched:", contractData);
         setContractToEdit(contractData);
         setOpen(true);
       } else {
@@ -103,7 +105,6 @@ const Contrat = () => {
       return [];
     }
   };
-  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -131,8 +132,8 @@ const Contrat = () => {
       flex: 0.8,
       renderCell: (params) => (
         <>
-          <Button onClick={() => handleEdit(params.row.id)} startIcon={<EditIcon />} />
-          <Button onClick={() => handleDialogOpen(params.row.id)} startIcon={<DeleteIcon />} />
+          <Button onClick={() => handleEdit(params.row.id)} startIcon={<EditIcon style={{ color: '#124660' }} />} />
+          <Button onClick={() => handleDialogOpen(params.row.id)} startIcon={<DeleteIcon style={{ color: '#D42633' }}/>} />
         </>
       ),
     },
@@ -142,9 +143,7 @@ const Contrat = () => {
     <>
       <Box m="15px">
         <Header title="CONTRATS" />
-        <div>
-          <ContratForm open={open} handleClose={handleClose} contractToEdit={contractToEdit} />
-        </div>
+        <ContratForm open={open} handleClose={handleClose} contractToEdit={contractToEdit} />
         <Box
           m="0"
           height="75vh"
