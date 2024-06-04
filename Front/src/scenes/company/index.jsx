@@ -129,6 +129,7 @@ const Company = () => {
       if (response.ok) {
         console.log("Company added/updated successfully");
         handleClose();
+        
         window.location.reload();
       } else {
         console.error("Failed to add/update company");

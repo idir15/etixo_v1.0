@@ -1,3 +1,5 @@
+// Collaborator.js
+
 import React, { useState, useEffect } from "react";
 import {
   Button,
@@ -16,6 +18,7 @@ import { useTheme } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
+import CollaboratorForm from "./collaboratorForm";
 
 const Collaborator = () => {
   const theme = useTheme();
@@ -24,6 +27,8 @@ const Collaborator = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [idToDelete, setIdToDelete] = useState(null);
   const [collaborator, setCollaborator] = useState([]);
+  const [editData, setEditData] = useState(null);
+  const [openForm, setOpenForm] = useState(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -31,6 +36,8 @@ const Collaborator = () => {
 
   const handleClose = () => {
     setOpen(false);
+    setOpenForm(false);
+    setEditData(null);
   };
 
   const handleDialogOpen = (id) => {
@@ -47,7 +54,11 @@ const Collaborator = () => {
       const response = await fetch("http://localhost:8080/api/v1/getAllcollaborator");
       if (response.ok) {
         const data = await response.json();
-        return data;
+        const transformedData = data.map(collaborator => ({
+          ...collaborator,
+          companyName: collaborator.company.name ,
+        }));
+        return transformedData;
       } else {
         console.error("Failed to fetch collaborator");
         return [];
@@ -86,33 +97,24 @@ const Collaborator = () => {
     }
   };
 
-  const handleEdit = async (id) => {
-    try {
-      const response = await fetch(`http://localhost:8080/api/v1/getCollaborator/${id}`);
-      if (response.ok) {
-        const data = await response.json();
-        
-        setOpen(true); // Ouvre le formulaire de modification
-        
-      } else {
-        console.error("Failed to fetch collaborator for editing");
-      }
-    } catch (error) {
-      console.error("Error fetching collaborator for editing:", error);
-    }
-  
+
+  const handleEdit = (id) => {
+    const collaboratorToEdit = collaborator.find(collab => collab.id === id);
+    setEditData(collaboratorToEdit);
+    setOpenForm(true);
+
   };
 
   const columns = [
     { field: "name", headerName: "Nom", flex: 1 },
     { field: "firstname", headerName: "Prénom", flex: 1 },
     { field: "dateOfBirth", headerName: "Date de Naissance", flex: 1 },
-    { field: "nationality", headerName: "Nationalité", flex: 1 }, 
-    { field: "phone", headerName: "Télephone", flex: 1 },
+    { field: "nationality", headerName: "Nationalité", flex: 1, hide: true }, 
+    { field: "phone", headerName: "Télephone", flex: 1, hide: true },
     { field: "email", headerName: "Email", flex: 1 },
     { field: "companyName", headerName: "Nom Compagnie", flex: 1 },
-    { field: "address", headerName: "Adresse Collaborateur", flex: 1 },
-    { field: "socialSecurityNumber", headerName: "Numéro Securité Sociale", flex: 1 },
+    { field: "address", headerName: "Adresse Collaborateur", flex: 1, hide: true },
+    { field: "socialSecurityNumber", headerName: "Numéro Securité Sociale", flex: 1, hide: true },
     {
       field: "actions",
       headerName: "Actions",
@@ -120,7 +122,8 @@ const Collaborator = () => {
       renderCell: (params) => (
         <>
           <Button onClick={() => handleEdit(params.row.id)} startIcon={<EditIcon style={{ color: '#124660' }} />} />
-          <Button onClick={() => handleDialogOpen(params.row.id)} startIcon={<DeleteIcon style={{ color: '#D42633' }}/>} />
+          <Button onClick={() => handleDialogOpen(params.row.id)} startIcon={<DeleteIcon style={{ color: '#D42633' }} />} />
+
         </>
       ),
     },
@@ -131,7 +134,6 @@ const Collaborator = () => {
       <Box m="20px">
         <Header
           title="Collaborateur"
-        
         />
         <Box
           m="30px 0 0 0"
@@ -190,16 +192,26 @@ const Collaborator = () => {
           <p>Voulez-vous vraiment supprimer ce collaborateur ? Cette opération ne peut pas être annulée.</p>
         </DialogContent>
         <DialogActions style={{ border: 'none', textAlign: 'center', borderRadius: '5px', fontSize: '13px', padding: '10px 15px 25px' }}>
-          <Button onClick={handleDialogClose} color="info" size="large" style={{ color: '#999', minWidth: '120px', border: 'none', minHeight: '40px', borderRadius: '3px', margin: '0 5px', outline: 'none !important' }}>
-            Annuler
-          </Button>
-          <Button onClick={handleDelete} color="error" size="large" style={{ color: '#fff', minWidth: '120px', border: 'none', minHeight: '40px', borderRadius: '3px', margin: '0 5px', outline: 'none !important', background: '#f15e5e' }}>
-            Supprimer
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
-  );
+          <Button onClick={handleDialogClose} color="info" size="large"
+style={{ color: '#999', minWidth: '120px', border: 'none', minHeight: '40px', borderRadius: '3px', margin: '0 5px', outline: 'none !important' }}>
+Annuler
+</Button>
+<Button onClick={handleDelete} color="error" size="large" style={{ color: '#fff', minWidth: '120px', border: 'none', minHeight: '40px', borderRadius: '3px', margin: '0 5px', outline: 'none !important', background: '#f15e5e' }}>
+Supprimer
+</Button>
+</DialogActions>
+</Dialog>
+<CollaboratorForm
+open={openForm}
+handleClose={handleClose}
+updateCollaboratorData={(updatedCollaborator) => {
+const updatedList = collaborator.map(item => item.id === updatedCollaborator.id ? updatedCollaborator : item);
+setCollaborator(updatedList);
+}}
+editData={editData}
+/>
+</>
+);
 };
 
 export default Collaborator;

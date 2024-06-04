@@ -1,6 +1,7 @@
 package com.etixway.etixo.controller;
 
 import com.etixway.etixo.model.Collaborator;
+import com.etixway.etixo.model.Company;
 import com.etixway.etixo.service.CollaboratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,25 +28,26 @@ public class CollaboratorController {
         return collaboratorService.getAllCollaborator();
     }
 
-    @PostMapping("/addcollaborator")
-    public Collaborator addCollaborators(@RequestBody Collaborator collaborator) {
-        return collaboratorService.addCollaborator(collaborator);
-
+    @GetMapping("/getCollaborator/{id}")
+    public Optional<Collaborator> getCollaboratorById(@PathVariable Long id) {
+        return collaboratorService.getCollaboratorById(id);
     }
+
+    @PostMapping("/addcollaborator")
+    public Collaborator addCollaborators(@RequestBody Collaborator collaborator) { return collaboratorService.addCollaborator(collaborator); }
 
     @DeleteMapping("/deleteCollaborator/{id}")
     public ResponseEntity<String> deleteCollaborator(@PathVariable Long id) {
         return collaboratorService.deleteCollaborator(id);
     }
 
-    @GetMapping("/getCollaborator/{id}")
-    public Optional<Collaborator> getCollaboratorById(@PathVariable Long id) {
-        return collaboratorService.getCollaboratorById(id);
-    }
 
-    @PutMapping("/updateCollaborator/{id}")
-    public ResponseEntity<String> updateCollaboratorById(@PathVariable Long id, @RequestBody Collaborator updatedCollaborator) {
-        return collaboratorService.updateCollaboratorById(id, updatedCollaborator);
+
+
+
+    @PutMapping("/updatedCollaborator/{id}")
+    public ResponseEntity<String>  updateCollaboratorById(@PathVariable Long id, @RequestBody Collaborator updatedCollaborator) {
+        return collaboratorService. updateCollaboratorById(id, updatedCollaborator);
     }
 
 

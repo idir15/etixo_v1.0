@@ -9,7 +9,6 @@ import {
   Typography,
 } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
 import ContratForm from "./contratForm";
@@ -17,34 +16,31 @@ import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { tokens } from "../../theme";
 
 const Contrat = () => {
-  
   const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
   const [open, setOpen] = useState(false);
   const [contracts, setContracts] = useState([]);
   const [idToDelete, setIdToDelete] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-
   const [contractToEdit, setContractToEdit] = useState(null);
- 
-  
+  const colors = tokens(theme.palette.mode);
+
   const handleOpen = () => {
-    setContractToEdit(null); // Réinitialise les détails du contrat pour un nouvel ajout
+    setContractToEdit(null);
     setOpen(true);
   };
- 
+
   const handleClose = () => {
     setOpen(false);
   };
-
 
   const handleDialogOpen = (id) => {
     setDialogOpen(true);
     setIdToDelete(id);
   };
- 
+
   const handleDialogClose = () => {
     setDialogOpen(false);
   };
@@ -54,7 +50,7 @@ const Contrat = () => {
       const response = await fetch(`http://localhost:8080/api/v1/deleteContract/${idToDelete}`, {
         method: 'DELETE',
       });
- 
+
       if (response.ok) {
         console.log('Contrat supprimé avec succès');
         const updatedContracts = contracts.filter(contract => contract.id !== idToDelete);
@@ -69,14 +65,13 @@ const Contrat = () => {
   };
 
   const handleEdit = async (id) => {
+    console.log("handleEdit called with id:", id);
     try {
-      // Récupérer les informations du contrat par son ID
-      const response = await fetch(`http://localhost:8080/api/v1/getContractById/${id}`); 
+      const response = await fetch(`http://localhost:8080/api/v1/getContractById/${id}`);
       if (response.ok) {
         const contractData = await response.json();
-        // Pré-remplir le formulaire avec les données du contrat à modifier
+        console.log("Contract data fetched:", contractData);
         setContractToEdit(contractData);
-        // Ouvrir le formulaire de modification
         setOpen(true);
       } else {
         console.error('Erreur lors de la récupération des informations du contrat');
@@ -85,25 +80,32 @@ const Contrat = () => {
       console.error('Erreur réseau', error);
     }
   };
-  
-
 
   const getAllContracts = async () => {
     try {
       const response = await fetch("http://localhost:8080/api/v1/getAllContracts");
       if (response.ok) {
         const data = await response.json();
-        return data;
+        console.log("Données récupérées :", data);  
+  
+        const transformedData = data.map(contract => ({
+          ...contract,
+          collaboratorName: `${contract.collaborator.firstname} ${contract.collaborator.name}`,
+          companyName: contract.collaborator.company ? contract.collaborator.company.name : '', // Vérifie si la propriété company existe
+        }));
+        console.log("Données transformées :", transformedData);  
+  
+        return transformedData;
       } else {
-        console.error("Failed to fetch contracts");
+        console.error("Échec de la récupération des contrats");
         return [];
       }
     } catch (error) {
-      console.error("Error fetching contracts:", error);
+      console.error("Erreur lors de la récupération des contrats:", error);
       return [];
     }
   };
- 
+
   useEffect(() => {
     const fetchData = async () => {
       const contractsData = await getAllContracts();
@@ -111,17 +113,15 @@ const Contrat = () => {
     };
     fetchData();
   }, []);
- 
 
   const columns = [
-    { field: "id", headerName: "N°", flex: 0.1,},
-    // { field: "index", headerName: "N°", flex: 0.1, renderCell: (params) => params.api.getRowIndex(params.id) + 1},
+    { field: "id", headerName: "N°", flex: 0.1 },
     { field: "reference", headerName: "Référence", flex: 0.75 },
-    { field: "collaborator", headerName: "Collaborateur", flex: 1 },
+    { field: "collaboratorName", headerName: "Collaborateur", flex: 1 },
     { field: "contractType", headerName: "Type", flex: 0.75 },
-    { field: "company", headerName: "Société", flex: 1 },
-    { field: "status", headerName: "Statut", flex: 1 , hide: true},
-    { field: "startDate", headerName: "Date début", flex: 0.75},
+    { field: "companyName", headerName: "Société", flex: 1 },
+    { field: "status", headerName: "Statut", flex: 1, hide: true },
+    { field: "startDate", headerName: "Date début", flex: 0.75 },
     { field: "endDate", headerName: "Date fin", flex: 0.75 },
     { field: "annualGrossSalary", headerName: "Salaire Brut Annuel", flex: 1, hide: true },
     { field: "monthlyNetSalary", headerName: "Salaire Mensuel Net", flex: 1, hide: true },
@@ -132,28 +132,18 @@ const Contrat = () => {
       flex: 0.8,
       renderCell: (params) => (
         <>
-
-          <Button onClick={() => handleEdit(params.row.id)} startIcon={<EditIcon />} />
-
-
-          <Button onClick={() => handleDialogOpen(params.row.id)} startIcon={<DeleteIcon />} />
+          <Button onClick={() => handleEdit(params.row.id)} startIcon={<EditIcon style={{ color: '#124660' }} />} />
+          <Button onClick={() => handleDialogOpen(params.row.id)} startIcon={<DeleteIcon style={{ color: '#D42633' }}/>} />
         </>
       ),
     },
   ];
 
- 
   return (
     <>
       <Box m="15px">
-        <Header
-          title="CONTRATS"
-        />
- 
-        <div>
+        <Header title="CONTRATS" />
         <ContratForm open={open} handleClose={handleClose} contractToEdit={contractToEdit} />
-        </div>
-
         <Box
           m="0"
           height="75vh"
@@ -166,8 +156,6 @@ const Contrat = () => {
             },
             "& .name-column--cell": {
               color: colors.greenAccent[300],
-
-              
             },
             "& .MuiDataGrid-columnHeaders": {
               backgroundColor: "#82CFD8",
@@ -188,14 +176,9 @@ const Contrat = () => {
               color: `${colors.grey[100]} !important`,
               fontSize: "14px !important",
             },
-
-            
-            
           }}
         >
-
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1px' }}>
-
             <Button
               variant="contained"
               style={{ backgroundColor: '#06668C', color: '#FFFFFF' }}
@@ -206,7 +189,6 @@ const Contrat = () => {
               Ajouter
             </Button>
           </div>
-
           <DataGrid
             rows={contracts}
             sx={{
@@ -241,5 +223,5 @@ const Contrat = () => {
     </>
   );
 };
- 
+
 export default Contrat;
