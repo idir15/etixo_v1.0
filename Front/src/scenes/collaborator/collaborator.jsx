@@ -66,6 +66,7 @@ const Collaborator = () => {
     fetchData();
   }, []);
 
+
   const handleDelete = async () => {
     try {
       const response = await fetch(`http://localhost:8080/api/v1/deleteCollaborator/${idToDelete}`, {
@@ -85,8 +86,21 @@ const Collaborator = () => {
     }
   };
 
-  const handleEdit = (id) => {
-    console.log("Modifier l'élément avec l'ID :", id);
+  const handleEdit = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/v1/getCollaborator/${id}`);
+      if (response.ok) {
+        const data = await response.json();
+        
+        setOpen(true); // Ouvre le formulaire de modification
+        
+      } else {
+        console.error("Failed to fetch collaborator for editing");
+      }
+    } catch (error) {
+      console.error("Error fetching collaborator for editing:", error);
+    }
+  
   };
 
   const columns = [
@@ -105,8 +119,8 @@ const Collaborator = () => {
       flex: 1,
       renderCell: (params) => (
         <>
-          <Button onClick={() => handleEdit(params.row.id)} startIcon={<EditIcon />} />
-          <Button onClick={() => handleDialogOpen(params.row.id)} startIcon={<DeleteIcon />} />
+          <Button onClick={() => handleEdit(params.row.id)} startIcon={<EditIcon style={{ color: '#124660' }} />} />
+          <Button onClick={() => handleDialogOpen(params.row.id)} startIcon={<DeleteIcon style={{ color: '#D42633' }}/>} />
         </>
       ),
     },
