@@ -52,7 +52,7 @@ const Contrat = () => {
       });
 
       if (response.ok) {
-        console.log('Contrat supprimé avec succès');
+      
         const updatedContracts = contracts.filter(contract => contract.id !== idToDelete);
         setContracts(updatedContracts);
         handleDialogClose();
@@ -65,13 +65,12 @@ const Contrat = () => {
   };
 
   const handleEdit = async (id) => {
-    console.log("handleEdit called with id:", id);
     try {
       const response = await fetch(`http://localhost:8080/api/v1/getContractById/${id}`);
       if (response.ok) {
         const contractData = await response.json();
-        console.log("Contract data fetched:", contractData);
         setContractToEdit(contractData);
+
         setOpen(true);
       } else {
         console.error('Erreur lors de la récupération des informations du contrat');
@@ -86,14 +85,11 @@ const Contrat = () => {
       const response = await fetch("http://localhost:8080/api/v1/getAllContracts");
       if (response.ok) {
         const data = await response.json();
-        console.log("Données récupérées :", data);  
-  
         const transformedData = data.map(contract => ({
           ...contract,
           collaboratorName: `${contract.collaborator.firstname} ${contract.collaborator.name}`,
           companyName: contract.collaborator.company ? contract.collaborator.company.name : '', // Vérifie si la propriété company existe
         }));
-        console.log("Données transformées :", transformedData);  
   
         return transformedData;
       } else {

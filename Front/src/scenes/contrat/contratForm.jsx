@@ -153,7 +153,6 @@ const ContratForm = ({ open, handleClose, contractToEdit }) => {
         });
 
         if (response.ok) {
-          console.log("Contract added/updated successfully");
           handleClose();
           window.location.reload();
         } else {
@@ -205,6 +204,7 @@ const ContratForm = ({ open, handleClose, contractToEdit }) => {
                 options={collaborators}
                 getOptionLabel={(option) => `${option.name} ${option.firstname}`}
                 onChange={handleCollaboratorSelect}
+                value={contractData.collaborator}
                 renderInput={(params) => (
                   <TextField
                     {...params}

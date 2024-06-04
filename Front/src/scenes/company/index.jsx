@@ -95,7 +95,6 @@ const Company = () => {
       });
  
       if (response.ok) {
-        console.log('Compagnie supprimée avec succès');
         const updatedCompanies = companies.filter(company => company.id !== idToDelete);
         setCompanies(updatedCompanies);
         handleDialogClose();
@@ -127,7 +126,6 @@ const Company = () => {
       });
   
       if (response.ok) {
-        console.log("Company added/updated successfully");
         handleClose();
         
         window.location.reload();

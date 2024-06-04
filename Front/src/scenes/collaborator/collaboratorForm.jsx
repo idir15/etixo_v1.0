@@ -124,7 +124,6 @@ const CollaboratorForm = ({ open, handleClose, updateCollaboratorData, editData 
         });
     
         if (response.ok) {
-          console.log("Collaborator added/updated successfully");
           handleClose();
           updateCollaboratorData(collaboratorData);
         } else {
